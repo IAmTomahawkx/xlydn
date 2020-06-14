@@ -1,0 +1,10 @@
+discord.py[voice]
+git+https://github.com/IAmTomahawkx/TwitchIO@master
+aioconsole
+aiosqlite3
+aiohttp
+psutil
+requests
+colorama
+jishaku
+youtube_dl
