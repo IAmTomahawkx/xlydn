@@ -18,13 +18,10 @@ class ActionConverter(commands.Converter):
         argument = argument.lower()
         if argument in ("tempmute", "temp mute", "temporary mute", "mute"):
             return 1
-
         if argument in ("kick", "boot"):
             return 2
-
         if argument in ("tempban", "temp ban", "temporary ban"):
             return 3
-
         if argument in ("ban",):
             return 4
 

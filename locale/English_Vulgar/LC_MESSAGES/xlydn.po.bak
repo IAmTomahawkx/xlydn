@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-06-12 21:48-0700\n"
+"POT-Creation-Date: 2020-06-14 15:15-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,35 +16,35 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: .\utils\bot.py:141 .\utils\bot.py:146
+#: .\utils\bot.py:142 .\utils\bot.py:147
 msgid ""
 "Please go to {0} to establish a connection between discord and twitch for "
 "your user in this bot. You must have already linked your discord and twitch!"
 msgstr ""
 
-#: .\utils\bot.py:224 .\utils\bot.py:232
+#: .\utils\bot.py:225 .\utils\bot.py:233
 msgid "Command `{0}` already exists"
 msgstr ""
 
-#: .\utils\bot.py:227
+#: .\utils\bot.py:228
 msgid "Command name is a reserved word"
-msgstr ""
+msgstr "Can't use that name dumbass, I'm already using it"
 
-#: .\utils\bot.py:237
+#: .\utils\bot.py:238
 msgid "Command `{0}` does not exist"
-msgstr ""
+msgstr "Never heard of `{0}` before"
 
-#: .\utils\time.py:129
+#: .\utils\time.py:130
 msgid "This time is in the past."
-msgstr ""
+msgstr "Yeh can't change the past"
 
-#: .\utils\time.py:133
+#: .\utils\time.py:134
 msgid "Missing argument after the time."
 msgstr ""
 
 #: .\utils\time.py:170
 msgid "Time Error. try \"in an hour\" or \"5 days\"."
-msgstr ""
+msgstr "No clue what you said. Try \"in an hour\" or \"5 days\"."
 
 #: .\utils\time.py:186
 msgid "Expected quote before time input..."
@@ -54,24 +54,64 @@ msgstr ""
 msgid "If the time is quoted, you must unquote it."
 msgstr ""
 
+#: .\utils\time.py:219
+msgid " ago"
+msgstr ""
+
+#: .\utils\time.py:222
+msgid "year"
+msgstr ""
+
+#: .\utils\time.py:223
+msgid "month"
+msgstr ""
+
+#: .\utils\time.py:224 .\utils\time.py:236
+msgid "day"
+msgstr ""
+
+#: .\utils\time.py:225
+msgid "hour"
+msgstr ""
+
+#: .\utils\time.py:226
+msgid "minute"
+msgstr ""
+
+#: .\utils\time.py:227
+msgid "second"
+msgstr ""
+
+#: .\utils\time.py:241
+msgid "week"
+msgstr ""
+
+#: .\utils\time.py:257
+msgid "now"
+msgstr ""
+
+#: .\utils\time.py:260
+msgid "and"
+msgstr ""
+
 #: .\addons\twitch\quotes.py:18 .\addons\discord\quotes.py:18
 msgid "Added quote"
-msgstr ""
+msgstr "Yeah sure"
 
 #: .\addons\twitch\quotes.py:23 .\addons\twitch\quotes.py:28
 #: .\addons\twitch\quotes.py:38 .\addons\twitch\quotes.py:43
 #: .\addons\discord\quotes.py:23 .\addons\discord\quotes.py:28
 #: .\addons\discord\quotes.py:38 .\addons\discord\quotes.py:43
 msgid "Please input a valid quote"
-msgstr ""
+msgstr "That quote dont exist dumbass"
 
 #: .\addons\twitch\quotes.py:32 .\addons\discord\quotes.py:32
 msgid "Removed quote {0}"
-msgstr ""
+msgstr "Quote {0} went down the shitter"
 
 #: .\addons\twitch\quotes.py:50 .\addons\discord\quotes.py:50
 msgid "No quotes found"
-msgstr ""
+msgstr "There ain't nothin to show"
 
 #: .\addons\twitch\commands.py:58 .\addons\discord\commands.py:56
 msgid "No custom commands"
@@ -79,7 +119,7 @@ msgstr ""
 
 #: .\addons\twitch\commands.py:74 .\addons\discord\commands.py:73
 msgid "Added command `{0}`"
-msgstr ""
+msgstr "If you insist... Added command `{0}`"
 
 #: .\addons\twitch\commands.py:81 .\addons\twitch\commands.py:95
 #: .\addons\twitch\commands.py:106 .\addons\twitch\commands.py:121
@@ -91,35 +131,35 @@ msgstr ""
 #: .\addons\discord\commands.py:215 .\addons\discord\commands.py:230
 #: .\addons\discord\commands.py:245
 msgid "Command `{0}` not found"
-msgstr ""
+msgstr "No clue what `{0}` is"
 
 #: .\addons\twitch\commands.py:88 .\addons\discord\commands.py:87
 msgid "Command `{0}` deleted"
-msgstr ""
+msgstr "`{0}` went down the shitter"
 
 #: .\addons\twitch\commands.py:99 .\addons\discord\commands.py:98
 msgid "Command updated successfully"
-msgstr ""
+msgstr "Dun"
 
 #: .\addons\twitch\commands.py:126 .\addons\discord\commands.py:173
 msgid "This user has already been added to the whitelist"
-msgstr ""
+msgstr "Y'know this person is already on the list right?"
 
 #: .\addons\twitch\commands.py:130 .\addons\twitch\commands.py:165
 #: .\addons\discord\commands.py:177 .\addons\discord\commands.py:208
 #: .\addons\discord\commands.py:238
 msgid "Added {0} to the command whitelist"
-msgstr ""
+msgstr "I'll let {0} use this command when I feel like it"
 
 #: .\addons\twitch\commands.py:143 .\addons\discord\commands.py:189
 msgid "This user has not been added to the whitelist"
-msgstr ""
+msgstr "They ain't on the list"
 
 #: .\addons\twitch\commands.py:147 .\addons\twitch\commands.py:183
 #: .\addons\discord\commands.py:193 .\addons\discord\commands.py:223
 #: .\addons\discord\commands.py:253
 msgid "Removed {0} from the command list"
-msgstr ""
+msgstr "{0} has been liberated from the command list"
 
 #: .\addons\twitch\commands.py:153 .\addons\twitch\commands.py:171
 msgid "{0} is not a valid role"
@@ -140,7 +180,7 @@ msgstr ""
 
 #: .\addons\twitch\misc.py:25 .\addons\discord\misc.py:29
 msgid "Uh oh! Looks like the website is currently offline! Try again later"
-msgstr ""
+msgstr "The website done fucked, try later"
 
 #: .\addons\twitch\misc.py:36
 msgid "{0}, Successfully connected to {1} on discord"
@@ -180,7 +220,7 @@ msgstr ""
 
 #: .\addons\discord\misc.py:23
 msgid "You have already connected to {0}!"
-msgstr ""
+msgstr "You're already {0}, smart guy"
 
 #: .\addons\discord\misc.py:36
 msgid "{0}, Successfully connected to {1} on twitch"
@@ -192,45 +232,140 @@ msgstr ""
 
 #: .\addons\discord\handlers.py:21
 msgid "Missing arguments! see `{0}`"
+msgstr "You're missing some arguments there, buddy. Try looking at `{0}` to avoid embarrassment"
+
+#: .\addons\discord\mod.py:36
+msgid "Invalid action! Try 'tempmute', 'kick', 'tempban' or 'ban'"
 msgstr ""
 
-#: .\addons\discord\mod.py:56
+#: .\addons\discord\mod.py:79
 msgid ""
-"**Warning: failed to tempmute, invalid mute role**\n"
-"`[{0}]` \\U0001f910 **{1}** tempmuted *{2}* ({3})\n"
-"`[ Reason ]` <{4} → {5} Strikes> {6}"
+"`[{0}]` \\U0001f4f0 **{1}** removed {7} strikes from *{2}* ({3})\n"
+"[{4} → {5} Strikes] ` Reason ` {6}"
 msgstr ""
 
-#: .\addons\discord\mod.py:57 .\addons\discord\mod.py:63
-#: .\addons\discord\mod.py:70 .\addons\discord\mod.py:77
-#: .\addons\discord\mod.py:83
+#: .\addons\discord\mod.py:80 .\addons\discord\mod.py:85
+#: .\addons\discord\mod.py:95 .\addons\discord\mod.py:101
+#: .\addons\discord\mod.py:108 .\addons\discord\mod.py:115
+#: .\addons\discord\mod.py:122 .\addons\discord\mod.py:128
+#: .\addons\discord\mod.py:225 .\addons\discord\mod.py:259
+#: .\addons\discord\mod.py:289
 msgid "None given"
 msgstr ""
 
-#: .\addons\discord\mod.py:62
+#: .\addons\discord\mod.py:84
+msgid ""
+"`[{0}]` \\U0001f5de **{1}** gave {7} strikes to *{2}* ({3})\n"
+"[{4} → {5} Strikes] ` Reason ` {6}"
+msgstr ""
+
+#: .\addons\discord\mod.py:94
+msgid ""
+"**Warning: failed to tempmute, invalid mute role**\n"
+"`[{0}]` \\U0001f910 **{1}** tempmuted *{2}* ({3})\n"
+"[{4} → {5} Strikes] ` Reason ` {6}"
+msgstr ""
+
+#: .\addons\discord\mod.py:100
 msgid ""
 "`[{0}]` \\U0001f910 **{1}** tempmuted *{2}* ({3})\n"
-"`[ Reason ]` <{4} → {5} Strikes> {6}"
+"[{4} → {5} Strikes] ` Reason ` {6}"
 msgstr ""
 
-#: .\addons\discord\mod.py:69
+#: .\addons\discord\mod.py:107
 msgid ""
 "`[{0}]` \\U0001f462 **{1}** kicked *{2}* ({3})\n"
-"`[ Reason ]` <{4} → {5} Strikes> {6}"
+"[{4} → {5} Strikes] ` Reason ` {6}"
 msgstr ""
 
-#: .\addons\discord\mod.py:76
+#: .\addons\discord\mod.py:114
+msgid ""
+"`[{0}]` \\U0001fa93 **{1}** kicked *{2}* ({3})\n"
+"[{4} → {5} Strikes] ` Reason ` {6}"
+msgstr ""
+
+#: .\addons\discord\mod.py:121
 msgid ""
 "`[{0}]` \\U0001f528 **{1}** tempbanned *{2}* ({3})\n"
-"`[ Reason ]` <{4} → {5} Strikes> {6}"
+"[{4} → {5} Strikes] ` Reason ` {6}"
 msgstr ""
 
-#: .\addons\discord\mod.py:82
+#: .\addons\discord\mod.py:127
 msgid ""
 "`[{0}]` \\U0001f528 **{1}** banned *{2}* ({3})\n"
-"`[ Reason ]` <{4} → {5} Strikes> {6}"
+"[{4} → {5} Strikes] ` Reason ` {6}"
 msgstr ""
 
-#: .\addons\discord\mod.py:112
+#: .\addons\discord\mod.py:137
+msgid "temp mute"
+msgstr ""
+
+#: .\addons\discord\mod.py:138
+msgid "kick"
+msgstr ""
+
+#: .\addons\discord\mod.py:139
+msgid "soft ban"
+msgstr ""
+
+#: .\addons\discord\mod.py:140
+msgid "temp ban"
+msgstr ""
+
+#: .\addons\discord\mod.py:141
+msgid "ban"
+msgstr ""
+
+#: .\addons\discord\mod.py:174 .\addons\discord\mod.py:183
 msgid "No targets given to strike"
+msgstr ""
+
+#: .\addons\discord\mod.py:178
+msgid "Added {0} strikes to {1}"
+msgstr ""
+
+#: .\addons\discord\mod.py:187
+msgid "Removed {0} strikes from {1}"
+msgstr ""
+
+#: .\addons\discord\mod.py:197
+msgid "Please respond with the duration this should last for"
+msgstr ""
+
+#: .\addons\discord\mod.py:203
+msgid "`{0}` strikes will now be punished with a {1}"
+msgstr ""
+
+#: .\addons\discord\mod.py:206
+msgid ", lasting "
+msgstr ""
+
+#: .\addons\discord\mod.py:213
+msgid "Strike level {0} does not have a punishment"
+msgstr ""
+
+#: .\addons\discord\mod.py:220
+msgid "Removed punishment for strike level {0}"
+msgstr ""
+
+#: .\addons\discord\mod.py:244
+msgid ""
+"`[{0}]` \\U0001f528 **{1}** banned user with id `{2}`\n"
+"` Reason ` {3}"
+msgstr ""
+
+#: .\addons\discord\mod.py:248
+msgid ""
+"`[{0}]` \\U0001f528 **{1}** banned *{2}* ({3})\n"
+"` Reason ` {4}"
+msgstr ""
+
+#: .\addons\discord\mod.py:263 .\addons\discord\mod.py:293
+msgid "Couldn't ban {0} due to role hierarchy"
+msgstr ""
+
+#: .\addons\discord\mod.py:278 .\addons\discord\mod.py:307
+msgid ""
+"`[{0}]` \\U0001fa93 **{1}** soft banned *{2}* ({3})\n"
+"` Reason ` {4}"
 msgstr ""

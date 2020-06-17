@@ -20,6 +20,7 @@ import twitchio
 import twitchio.cooldowns
 import twitchio.http
 import twitchio.websocket
+import pyk
 from discord.ext import commands
 from discord.ext.commands.core import _CaseInsensitiveDict
 from discord.ext.commands.view import StringView
@@ -30,14 +31,14 @@ from . import token, errors, common, locale
 from .contexts import CompatContext, TwitchContext
 from .db import Database
 
-logger = logging.getLogger("amalna")
+logger = logging.getLogger("xlydn")
 hdl = logging.StreamHandler(sys.stderr)
 hdl.setLevel(logging.DEBUG)
 logger.addHandler(hdl)
 logging.getLogger("aiosqlite3").addHandler(logging.NullHandler(100)) # aiosqlite warnings are annoying and useless
-discord_log = logging.getLogger("amalna.discord")
-twitch_bot_log = logging.getLogger("amalna.twitchBot")
-twitch_streamer_log = logging.getLogger("amalna.twitchStreamer")
+discord_log = logging.getLogger("xlydn.discord")
+twitch_bot_log = logging.getLogger("xlydn.twitchBot")
+twitch_streamer_log = logging.getLogger("xlydn.twitchStreamer")
 logger.debug("test")
 twitch_streamer_log.debug("test")
 
@@ -72,6 +73,7 @@ class System:
         self.discord_appinfo = None
         self.pump_task = None
         self.connecting_count = 0
+        self.namespace = pyk.PYKNamespace()
 
     async def pump_ws(self):
         while not self.ws.closed:
@@ -114,7 +116,7 @@ class System:
             if self.ws_session is None:
                 self.ws_session = aiohttp.ClientSession()
 
-                self.ws = await self.ws_session.ws_connect("https://amalna.idevision.net/bot/link_ws")
+                self.ws = await self.ws_session.ws_connect("https://bot.idevision.net/bot/link_ws")
 
             if self.pump_task is None:
                 self.pump_task = self.loop.create_task(self.pump_ws())
@@ -150,7 +152,7 @@ class System:
                 await ctx.send(fmt)
 
             if self.ws is None or self.ws.closed:
-                self.ws = await self.ws_session.ws_connect("https://amalna.idevision.net/bot/link_ws")
+                self.ws = await self.ws_session.ws_connect("https://bot.idevision.net/bot/link_ws")
 
             await self.ws.send_json(
                 {"Authorization": self.config.get("tokens", "twitch_streamer_token"), "u": user_id, "c": True}) # tell it to wait 5 minutes this time

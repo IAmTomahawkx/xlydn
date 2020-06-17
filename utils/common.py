@@ -155,7 +155,7 @@ class User:
         try:
             self.badges = json.loads(row[7]) if row[7] else []
         except:
-            print(row)
+            self.badges = []
 
 
 class BucketType(Enum):

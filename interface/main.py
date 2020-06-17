@@ -17,7 +17,7 @@ class App(tkinter.Tk):
         self.setup()
 
     def setup(self):
-        self.title("Test")
+        self.title("Xlydn")
         self.geometry('600x400')
         self.wm_minsize(400, 200)
         self.notebook = tkinter.ttk.Notebook(self)
@@ -27,10 +27,10 @@ class App(tkinter.Tk):
 
     def setup_home(self):
         frame = tkinter.ttk.Frame(self.notebook)
-        self.notebook.add(frame, text="Dashboard")
+        self.notebook.add(frame, text=self.system.locale("Dashboard"))
 
         self.dash_prefix = tkinter.StringVar(value=self.system.config.get("general", "command_prefix"))
-        tkinter.ttk.Label(frame, text="command prefix").grid(column=1, row=1)
+        tkinter.ttk.Label(frame, text=self.system.locale("command prefix")).grid(column=1, row=1)
         tkinter.ttk.Entry(frame, textvariable=self.dash_prefix, validate="focusout", validatecommand=self.home_prefix_is_modified).grid(column=1, row=2)
 
     def setup_connections(self):
@@ -45,11 +45,12 @@ class App(tkinter.Tk):
         self.token_streamer = tkinter.StringVar(value=self.system.config.get("tokens", "twitch_streamer_token"))
         self.token_bot = tkinter.StringVar(value=self.system.config.get("tokens", "twitch_bot_token"))
         self.server_name = tkinter.StringVar(value=self.system.config.get("general", "server_name"))
-        self.serversearch_text = tkinter.StringVar(value=self.system.config.get("general", "server_about", fallback="Not connected to a server") or "Not connected to a server")
+        self.serversearch_text = tkinter.StringVar(value=self.system.config.get("general", "server_about",
+                                  fallback=self.system.locale("Not connected to a server")) or self.system.locale("Not connected to a server"))
 
         tkinter.ttk.Checkbutton(frame)
 
-        tkinter.ttk.Label(frame, text="Discord bot token").grid(column=1, row=1)
+        tkinter.ttk.Label(frame, text=self.system.locale("Discord bot token")).grid(column=1, row=1)
         self.connections_discordtoken = dtoken = tkinter.ttk.Entry(frame, width=30, textvar=self.token_discord)
         dtoken.grid(column=1, row=2)
         subframe1 = tkinter.ttk.Frame(frame)
@@ -61,24 +62,24 @@ class App(tkinter.Tk):
 
         tkinter.ttk.Separator(frame).grid(row=4, pady=5)
 
-        tkinter.ttk.Label(frame, text="Twitch Streamer token").grid(column=1, row=5)
+        tkinter.ttk.Label(frame, text=self.system.locale("Twitch Streamer token")).grid(column=1, row=5)
         self.connections_twitchstreamer = tstoken = tkinter.ttk.Entry(frame, width=30, textvar=self.token_streamer)
         tstoken.grid(column=1, row=6)
         subframe2 = tkinter.ttk.Frame(frame)
-        self.connections_streamertoken_connect = stc = tkinter.ttk.Button(subframe2, text="Connect", command=self.click_streamerconnect, state=initial_connect_state)
-        self.connections_streamertoken_disconnect = stdc = tkinter.ttk.Button(subframe2, text="Disconnect", command=self.click_streamerdisconnect, state=initial_disconnect_state)
+        self.connections_streamertoken_connect = stc = tkinter.ttk.Button(subframe2, text=self.system.locale("Connect"), command=self.click_streamerconnect, state=initial_connect_state)
+        self.connections_streamertoken_disconnect = stdc = tkinter.ttk.Button(subframe2, text=self.system.locale("Disconnect"), command=self.click_streamerdisconnect, state=initial_disconnect_state)
         stc.grid(column=1, row=1)
         stdc.grid(column=2, row=1)
         subframe2.grid(column=1, row=7)
 
         tkinter.ttk.Separator(frame).grid(row=8, pady=5)
 
-        tkinter.ttk.Label(frame, text="Twitch Bot token").grid(column=1, row=9)
+        tkinter.ttk.Label(frame, text=self.system.locale("Twitch Bot token")).grid(column=1, row=9)
         self.connections_twitchbot = tbtoken = tkinter.ttk.Entry(frame, width=30, textvar=self.token_bot)
         tbtoken.grid(column=1, row=10)
         subframe3 = tkinter.ttk.Frame(frame)
-        self.connections_bottoken_connect = btc = tkinter.ttk.Button(subframe3, text="Connect", command=self.click_botconnect, state=initial_connect_state)
-        self.connections_bottoken_disconnect = btdc = tkinter.ttk.Button(subframe3, text="Disconnect", command=self.click_botdisconnect, state=initial_disconnect_state)
+        self.connections_bottoken_connect = btc = tkinter.ttk.Button(subframe3, text=self.system.locale("Connect"), command=self.click_botconnect, state=initial_connect_state)
+        self.connections_bottoken_disconnect = btdc = tkinter.ttk.Button(subframe3, text=self.system.locale("Disconnect"), command=self.click_botdisconnect, state=initial_disconnect_state)
         btc.grid(column=1, row=1)
         btdc.grid(column=2, row=1)
         subframe3.grid(column=1, row=11)
@@ -87,7 +88,7 @@ class App(tkinter.Tk):
 
         self.connections_servername = sname = tkinter.ttk.Entry(frame, width=30, textvar=self.server_name)
         sname.grid(row=13, column=1)
-        self.connections_serversearch = srvsrch = tkinter.ttk.Button(frame, text="Search servers", command=self.connections_search_guild_name, state=initial_disconnect_state)
+        self.connections_serversearch = srvsrch = tkinter.ttk.Button(frame, text=self.system.locale("Search servers"), command=self.connections_search_guild_name, state=initial_disconnect_state)
         srvsrch.grid(row=13, column=2)
         self.connections_serversearch_label = tkinter.ttk.Label(frame, textvar=self.serversearch_text)
         self.connections_serversearch_label.grid(row=14, column=1)
@@ -106,7 +107,7 @@ class App(tkinter.Tk):
             self.serversearch_text.set(pre)
 
         if not self.system.discord_bot.is_ready():
-            self.serversearch_text.set("Failed: Discord Bot is not connected!")
+            self.serversearch_text.set(self.system.locale("Failed: Discord Bot is not connected!"))
             self.after(2000, resetlabel)
             return
 
@@ -114,14 +115,14 @@ class App(tkinter.Tk):
         name = self.server_name.get()
         for guild in bot.guilds:
             if guild.name == name.strip():
-                fmt = f"Server name: {guild.name}\nServer id: {guild.id}\nServer Owner: {guild.owner}"
-                self.serversearch_text.set(f"Connected to a server\n{fmt}")
+                fmt = self.system.locale("Server name: {0}\nServer id: {2}\nServer Owner: {2}").format(guild.name, guild.id, guild.owner)
+                self.serversearch_text.set(self.system.locale("Connected to a server\n{0}").format(fmt))
                 self.system.config.set("general", "server_about", fmt)
                 self.system.config.set("general", "server_id", str(guild.id))
                 self.system.config.set("general", "server_name", guild.name)
                 return
 
-        self.serversearch_text.set(f"No server found with the name \"{name}\"")
+        self.serversearch_text.set(self.system.locale("No server found with the name \"{0}\"").format(name))
 
 
     def connections_swap_discord_connect_state(self, connected: bool):
@@ -198,7 +199,6 @@ class App(tkinter.Tk):
                 self.update()
                 await asyncio.sleep(1/120)
             except tkinter.TclError:
-                print("closed view")
                 return
 
 

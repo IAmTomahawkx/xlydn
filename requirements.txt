@@ -1,5 +1,5 @@
 discord.py[voice]
-git+https://github.com/IAmTomahawkx/TwitchIO@master
+twitchio
 aioconsole
 aiosqlite3
 aiohttp
@@ -8,3 +8,6 @@ requests
 colorama
 jishaku
 youtube_dl
+git+https://github.com/IAmTomahawkx/pyk
+parsedatetime
+python-dateutil

@@ -7,4 +7,4 @@ for locale in os.listdir("./locale"):
     if locale.endswith('.py'):
         continue
     file = os.path.join("./locale", locale, "LC_MESSAGES/xlydn.po")
-    subprocess.call(["msgfmt", file, "-o", os.path.join("./locale", locale, "LC_MESSAGES/xlydn.mo")])
+    subprocess.call(["/usr/local/Cellar/gettext/0.20.2_1/bin/msgfmt", file, "-o", os.path.join("./locale", locale, "LC_MESSAGES/xlydn.mo")])

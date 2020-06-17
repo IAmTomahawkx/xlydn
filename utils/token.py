@@ -33,7 +33,7 @@ async def try_bot_refresh(core, session):
 
 async def prompt_user_for_token(system, session, who="Streamer"):
     import webbrowser
-    webbrowser.open_new("https://bot.idevision.net/user/token_warning?who="+who)
+    webbrowser.open_new(BASE_URL + "user/token_warning?who="+who)
     import colorama
     print(colorama.Fore.RED + f"{who} token is invalid. disconnected." + colorama.Fore.RESET)
     if who == "Streamer":

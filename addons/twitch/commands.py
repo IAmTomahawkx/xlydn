@@ -18,8 +18,7 @@ class CustomCommands(commands.Cog):
         self.system = bot.system
 
     async def process_commands(self, msg, command, view):
-        parsed = parser.parse(self.bot, msg, view, command.message, True)
-        await msg.channel.send(parsed)
+        await parser.parse(self.bot, msg, view, command.message, False)
 
     @commands.Cog.listener()
     async def event_message(self, message: twitchio.Message):

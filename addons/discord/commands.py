@@ -17,8 +17,7 @@ class CustomCommands(commands.Cog):
         self.system = bot.system
 
     async def process_commands(self, msg, command, view):
-        parsed = parser.parse(self.bot, msg, view, command.message, True)
-        await msg.channel.send(parsed)
+        await parser.parse(self.bot, msg, view, command.message, True)
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):

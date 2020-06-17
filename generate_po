@@ -26,10 +26,10 @@ if not os.path.isfile('./locale/all_files.py'):
     with open('./locale/all_files.py', 'w') as f:
         f.write(all_files)
 
-stuff = subprocess.run(['py', './locale/all_files.py'], capture_output=True)
+stuff = subprocess.run([sys.executable, './locale/all_files.py'], capture_output=True)
 content = stuff.stdout
 
-subprocess.run(['xgettext', '--files-from=-', '--from-code=UTF-8', '--keyword', '--keyword=locale', '-o', file],
+subprocess.run(['/usr/local/Cellar/gettext/0.20.2_1/bin/xgettext', '--files-from=-', '--from-code=UTF-8', '--keyword', '--keyword=locale', '-o', file],
                input=content)
 with open(file) as f:
     data = f.read()
@@ -41,7 +41,7 @@ data = re.sub(r'^"Content-Type: text/plain; charset=CHARSET\\n"$', r'"Content-Ty
 with open(file, "w") as f:
     f.write(data)
 
-subprocess.run([r'msgcat', file, file+'.bak', '-o', file+'.cat'])
+subprocess.run([r'/usr/local/Cellar/gettext/0.20.2_1/bin/msgcat', file, file+'.bak', '-o', file+'.cat'])
 # os.remove(file)
 with suppress(FileNotFoundError):
     os.rename(file+'.cat', file)

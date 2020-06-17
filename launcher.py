@@ -1,7 +1,9 @@
 import configparser
 import sys
 import asyncio
-import threading
+import logging
+import os
+from logging import handlers
 from concurrent.futures import ThreadPoolExecutor
 
 import discord
@@ -12,7 +14,7 @@ from utils.bot import System
 
 colorama.init()
 
-__VERSION__ = "0.0.1 unstable"
+__VERSION__ = "0.0.1"
 
 def run_forever(**kwargs):
     bot = System(config, **kwargs)
@@ -20,6 +22,20 @@ def run_forever(**kwargs):
 
 config = configparser.ConfigParser(allow_no_value=True, interpolation=None)
 config.read("config.ini")
+
+logger = logging.getLogger("xlydn")
+dpylog = logging.getLogger("discord.py")
+tiolog = logging.getLogger("twitchio")
+if config.getboolean("developer", "dev_mode", fallback=False):
+    logging.basicConfig()
+else:
+    if not os.path.exists("log"):
+        os.mkdir("./log")
+
+    handle = handlers.RotatingFileHandler("log/xlydn.log", maxBytes=30000)
+    dpy_handle = handlers.RotatingFileHandler("log/discord.log", maxBytes=30000)
+    tio_handle = handlers.RotatingFileHandler("log/twitch.log", maxBytes=30000)
+
 
 executor = ThreadPoolExecutor(max_workers=config.getint("developer", "max_pool_workers", fallback=3))
 
