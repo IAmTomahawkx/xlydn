@@ -3,8 +3,7 @@
 config.ini
 services/data.db
 services/modstriking.bin
-
-
+dev_locale/all_files.py
 
 # Created by .ignore support plugin (hsz.mobi)
 ### Python template

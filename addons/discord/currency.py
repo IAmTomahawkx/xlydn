@@ -4,6 +4,9 @@ import discord
 from discord.ext import commands
 import humanize
 
+from utils.commands import command, group
+from utils.checks import dpy_check_editor
+
 def setup(bot):
     bot.add_cog(Currency(bot))
 
@@ -119,8 +122,10 @@ class ActivityMapping:
 
 
 class Currency(commands.Cog):
+    HELP_REQUIRES = []
     def __init__(self, bot):
         self.bot = bot
+        self.locale_name = bot.system.locale("Currency")
         self.activity = ActivityMapping(
             bot.system.config.getint("currency", "activity_discord_payout_rate", fallback=5),
             bot.system.config.getint("currency", "activity_discord_payout_per", fallback=15) * 60
@@ -158,18 +163,25 @@ class Currency(commands.Cog):
         a, b = self.activity.update_limit(msg)
         await self.award_buckets(msg.author, a, b)
 
-    @commands.command()
+    @command()
     @commands.guild_only()
-    @commands.has_permissions(administrator=True)
+    @dpy_check_editor()
     async def settings(self, ctx):
         """
         shows the currency settings
         """
         pass # TODO
 
-    @commands.command()
+    @command()
     @commands.guild_only()
-    @commands.has_permissions(administrator=True)
+    @dpy_check_editor()
     async def addpoints(self, ctx, target: discord.Member, amount: int):
         await self.add_user_points(target.id, amount)
+        await ctx.message.add_reaction("\U0001f44c")
+
+    @command()
+    @commands.guild_only()
+    @dpy_check_editor()
+    async def removepoints(self, ctx, target: discord.Member, amount: int):
+        await self.add_user_points(target.id, amount*-1)
         await ctx.message.add_reaction("\U0001f44c")

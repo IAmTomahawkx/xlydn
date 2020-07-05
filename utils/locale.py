@@ -1,7 +1,6 @@
 import gettext
 import os.path
 from glob import glob
-import tkinter
 
 BASE_DIR = "./"
 
@@ -23,7 +22,6 @@ locales |= {'English'}
 class LocaleTranslator:
     def __init__(self, cfg):
         self._config = cfg
-        #self.tk_var = tkinter.StringVar(master=None, value=cfg.get("general", "locale", fallback=LOCALE_DEFAULT))
 
     def get(self, text: str) -> str:
         if not gettext_translations:
@@ -42,7 +40,6 @@ class LocaleTranslator:
             raise ValueError(self("Invalid locale"))
 
         self._config.set("general", "locale", locale)
-        #self.tk_var.set(locale)
 
     def __call__(self, text: str) -> str:
         return self.get(text)

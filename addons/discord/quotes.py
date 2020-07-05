@@ -4,20 +4,28 @@ import random
 from discord.ext import commands
 import discord
 
+from utils.checks import dpy_check_editor
+from utils.commands import command, group
+
+
 def setup(bot):
     bot.add_cog(Quotes(bot))
 
 class Quotes(commands.Cog):
+    HELP_REQUIRES = []
+
     def __init__(self, bot):
         self.bot = bot
         self.system = bot.system
 
-    @commands.command()
+    @command()
+    @dpy_check_editor()
     async def addquote(self, ctx, *, quote):
         await self.system.db.execute("INSERT INTO quotes VALUES (?,?);", quote, int(time.time()))
         await ctx.send(self.system.locale("Added quote"))
 
-    @commands.command(aliases=['removequote', 'rmquote'])
+    @command(aliases=['removequote', 'rmquote'])
+    @dpy_check_editor()
     async def deletequote(self, ctx, num: int):
         if num < 1:
             return await ctx.send(self.system.locale("Please input a valid quote"))
@@ -31,7 +39,7 @@ class Quotes(commands.Cog):
         await self.system.db.execute("DELETE FROM quotes WHERE insert_time = ?", quote[1])
         await ctx.send(self.system.locale("Removed quote {0}").format(num+1))
 
-    @commands.command()
+    @command()
     async def quote(self, ctx, num: int = None):
         if num:
             if num < 1:

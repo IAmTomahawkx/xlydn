@@ -9,6 +9,8 @@ import discord
 from discord.ext import commands
 
 from utils import time as timeutil
+from utils.commands import command, group
+
 
 def setup(bot):
     bot.add_cog(Moderation(bot))
@@ -125,8 +127,11 @@ class StrikesValues:
             case, str(mod), str(target), target.id, prev or 0, after, reason or bot.system.locale("None given"))
 
 class Moderation(commands.Cog):
+    HELP_REQUIRES = ["mod"]
+
     def __init__(self, bot):
         self.bot = bot
+        self.locale_name = bot.system.locale("Moderation")
         self.system = bot.system
         self.db = self.system.db
         self.value = StrikesValues(self.system.config)
@@ -164,7 +169,7 @@ class Moderation(commands.Cog):
         except:
             pass
 
-    @commands.command()
+    @command()
     @commands.bot_has_permissions(ban_members=True, kick_members=True, manage_roles=True)
     async def strike(self, ctx, amount: Optional[int]=1, targets: commands.Greedy[discord.Member]=None, *, reason=None):
         if not targets:
@@ -174,7 +179,7 @@ class Moderation(commands.Cog):
 
         await ctx.send(self.system.locale("Added {0} strikes to {1}").format(amount, ", ".join([str(x) for x in targets])))
 
-    @commands.command()
+    @command()
     async def pardon(self, ctx, amount: Optional[int]=1, targets: commands.Greedy[discord.Member]=None, *, reason=None):
         if not targets:
             return await ctx.send(self.system.locale("No targets given to strike"))
@@ -183,7 +188,7 @@ class Moderation(commands.Cog):
 
         await ctx.send(self.system.locale("Removed {0} strikes from {1}").format(amount, ", ".join([str(x) for x in targets])))
 
-    @commands.group("strike-config", invoke_without_command=True)
+    @group("strike-config", invoke_without_command=True)
     async def strikecfg(self, ctx):
         pass
 
@@ -216,7 +221,7 @@ class Moderation(commands.Cog):
         self.value.save()
         await ctx.send(self.system.locale("Removed punishment for strike level {0}").format(strikes))
 
-    @commands.command()
+    @command()
     @commands.bot_has_permissions(ban_members=True)
     async def ban(self, ctx, targets: commands.Greedy[Union[discord.Member, int]], *, reason=None):
         reason = reason or self.system.locale("None given")
@@ -250,7 +255,7 @@ class Moderation(commands.Cog):
             except:
                 pass
 
-    @commands.command()
+    @command()
     @commands.bot_has_permissions(ban_members=True)
     async def softban(self, ctx, targets: commands.Greedy[Union[discord.Member, int]], *, reason):
         reason = reason or self.system.locale("None given")
@@ -280,7 +285,7 @@ class Moderation(commands.Cog):
             except:
                 pass
 
-    @commands.command()
+    @command()
     @commands.bot_has_permissions(kick_members=True)
     async def kick(self, ctx, targets: commands.Greedy[Union[discord.Member, int]], *, reason):
         reason = reason or self.system.locale("None given")

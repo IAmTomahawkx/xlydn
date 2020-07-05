@@ -11,7 +11,7 @@ import sys
 import traceback
 from concurrent.futures import CancelledError
 import gzip
-import threading
+import re
 
 import aiohttp
 import discord
@@ -30,6 +30,8 @@ from interface.main import App as Interface
 from . import token, errors, common, locale
 from .contexts import CompatContext, TwitchContext
 from .db import Database
+from .commands import CommandWithLocale, GroupWithLocale
+from .cooldowns import CooldownMapping
 
 logger = logging.getLogger("xlydn")
 hdl = logging.StreamHandler(sys.stderr)
@@ -73,7 +75,12 @@ class System:
         self.discord_appinfo = None
         self.pump_task = None
         self.connecting_count = 0
-        self.namespace = pyk.PYKNamespace()
+
+        self.twitch_automod_regex = None
+        self.discord_automod_regex = None
+        self.automod_domains = []
+
+        self.loop.create_task(self.build_automod_regex())
 
     async def pump_ws(self):
         while not self.ws.closed:
@@ -222,7 +229,7 @@ class System:
         self.command_cache[name] = resp = common.CustomCommand(row)
         return resp
 
-    async def add_command(self, name: str, places: int, content: str, cooldown: int, limits: str):
+    async def add_command(self, name: str, places: int, content: str, cooldown: int, limits: str, isscript: bool):
         if name in self.command_cache:
             raise ValueError(self.locale("Command `{0}` already exists").format(name))
 
@@ -230,7 +237,7 @@ class System:
             raise ValueError(self.locale("Command name is a reserved word"))
 
         try:
-            await self.db.execute("INSERT INTO commands VALUES (?,?,?,?,?)", name, places, content, cooldown, limits)
+            await self.db.execute("INSERT INTO commands VALUES (?,?,?,?,?,?)", name, places, content, cooldown, limits, int(isscript))
         except:
             raise ValueError(self.locale("Command `{0}` already exists").format(name))
 
@@ -309,6 +316,28 @@ class System:
         self.user_cache[resp.id] = resp
         return resp
 
+    async def build_automod_regex(self):
+        words = await self.db.fetch("SELECT * FROM automod_words;")
+        urls = await self.db.fetch("SELECT * FROM automod_domains;")
+        self.automod_domains = [domain[0] for domain in urls]
+
+        twitch_banned_words = [word[0] for word in words if word[1]]
+        discord_banned_words = [word[0] for word in words if word[2]]
+
+        self.twitch_automod_regex = re.compile((
+                              r'(?i)'  # case insensitive
+                              r'\b'  # word bound
+                              r'(?:{})'  # non capturing group, to make sure that the word bound occurs before/after all words
+                              r'\b'
+                          ).format('|'.join(map(re.escape, twitch_banned_words))))
+
+        self.discord_automod_regex = re.compile((
+                              r'(?i)'  # case insensitive
+                              r'\b'  # word bound
+                              r'(?:{})'  # non capturing group, to make sure that the word bound occurs before/after all words
+                              r'\b'
+                          ).format('|'.join(map(re.escape, discord_banned_words))))
+
     async def schedule_timer(self, fire_at: datetime.datetime, event: str, **kwargs):
         d = {"fire": fire_at, "event": event, "data": kwargs}
         await self.db.execute("INSERT INTO timers VALUES (?,?,?)", event, fire_at.timestamp(), gzip.compress(json.dumps(kwargs)))
@@ -385,38 +414,45 @@ class System:
         dbot = None
         streamer = None
         bot = None
+        fails = CooldownMapping.from_cooldown(5, 300)
         try:
             while not interface.done() and self.alive:
                 if self.bot_run_event.is_set() and (bot is None or bot.done()):
+                    if fails.update_rate_limit("bot.twitch"):
+                        self.bot_run_event.clear()
+                        self.interface.connections_swap_bot_connect_state(False)
+                        logger.warning("Failed to start Twitch Bot Client")
+                        continue
+
                     bot = self.loop.create_task(self.twitch_bot.try_start(self.config.get("tokens", "twitch_bot_token")))
 
                 if not self.bot_run_event.is_set() and bot is not None and not bot.done():
                     bot.cancel()
 
-                if self.bot_run_event.is_set() and (bot is None or bot.done()):
-                    twitch_bot_log.warning("Twitch bot exited and not stopped. attempting restart")
-                    bot = self.loop.create_task(self.twitch_bot.try_start(self.config.get("tokens", "twitch_bot_token")))
-
                 if self.streamer_run_event.is_set() and (streamer is None or streamer.done()):
+                    if fails.update_rate_limit("streamer.twitch"):
+                        self.streamer_run_event.clear()
+                        self.interface.connections_swap_bot_connect_state(False)
+                        logger.warning("Failed to start Twitch Streamer Client")
+                        continue
+
                     streamer = self.loop.create_task(self.twitch_streamer.try_start(self.config.get("tokens", "twitch_streamer_token")))
 
                 if not self.streamer_run_event.is_set() and streamer is not None and not streamer.done():
                     streamer.cancel()
 
-                if self.streamer_run_event.is_set() and (streamer is None or streamer.done()):
-                    twitch_streamer_log.warning("Twitch streamer exited and not stopped. attempting restart")
-                    streamer = self.loop.create_task(self.twitch_streamer.try_start(self.config.get("tokens", "twitch_streamer_token")))
-
                 if self.discord_run_event.is_set() and (dbot is None or dbot.done()):
+                    if fails.update_rate_limit("bot.discord"):
+                        self.discord_run_event.clear()
+                        self.interface.connections_swap_bot_connect_state(False)
+                        logger.warning("Failed to start Discord Bot")
+                        continue
+
                     dbot = self.loop.create_task(self.discord_bot.try_start(self.config.get("tokens", "discord_bot")))
 
                 if not self.discord_run_event.is_set() and dbot is not None and not dbot.done():
                     await self.discord_bot.logout()
                     dbot.cancel()
-
-                if self.discord_run_event.is_set() and (dbot is None or dbot.done()):
-                    discord_log.warning("Discord bot exited and not stopped. attempting restart")
-                    dbot = self.loop.create_task(self.discord_bot.try_start(self.config.get("tokens", "discord_bot")))
 
                 await asyncio.sleep(0)
 
@@ -457,6 +493,20 @@ class discord_bot(commands.Bot):
     async def start(self, *args, **kwargs):
         self.load()
         await super().start(*args, **kwargs)
+
+    async def locale_updated(self):
+        new_commands = {}
+        for command in self.commands:
+            try:
+                command.inject_locale(self)
+            except: pass
+
+            new_commands[command.name] = command
+            for al in command.aliases:
+                new_commands[al] = command
+
+        self.all_commands.clear()
+        self.all_commands.update(new_commands)
 
     def load(self):
         if self.loaded:
@@ -628,6 +678,20 @@ class twitch_bot(tio_commands.Bot, GroupMixin):
                     traceback.print_exc()
 
             self.loaded = True
+
+    async def locale_updated(self):
+        new_commands = {}
+        for command in self.commands:
+            try:
+                command.inject_locale(self)
+            except: pass
+
+            new_commands[command.name] = command
+            for al in command.aliases:
+                new_commands[al] = command
+
+        self.all_commands.clear()
+        self.all_commands.update(new_commands)
 
     def add_command(self, command):
         GroupMixin.add_command(self, command)

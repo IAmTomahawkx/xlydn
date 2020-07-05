@@ -38,6 +38,7 @@ class CustomCommand:
         self.message = row[2]
         self._raw_cd = row[3]
         self._limits = row[4]
+        self.isscript = row[5]
         if self._limits is not None:
             self._limits = json.loads(self._limits)
 
@@ -46,13 +47,14 @@ class CustomCommand:
             self.cooldown = CooldownMapping.from_cooldown(1, self._raw_cd, BucketType.default)
 
     @classmethod
-    def new(cls, name, message, use_discord=True, use_twitch=True, cooldown=60.0, limits=None):
+    def new(cls, name, message, use_discord=True, use_twitch=True, cooldown=60.0, limits=None, isscript=False):
         self = cls.__new__(cls)
         self.name = name
         self._places = 0 if use_discord and use_twitch else (1 if use_twitch and not use_discord else 2)
         self.message = message
         self._raw_cd = cooldown
         self.cooldown = CooldownMapping.from_cooldown(1, self._raw_cd, BucketType.default)
+        self.isscript = isscript
         self._limits = {
             "common": {
                 "ids": [],
@@ -70,7 +72,7 @@ class CustomCommand:
 
     @property
     def save(self):
-        return self.name, self._places, self.message, self._raw_cd, json.dumps(self._limits) if self._limits is not None else None
+        return self.name, self._places, self.message, self._raw_cd, json.dumps(self._limits) if self._limits is not None else None, self.isscript
 
     def can_run_discord(self, msg: discord.Message, usr:"User"):
         if self._places not in (0, 2):

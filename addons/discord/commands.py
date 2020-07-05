@@ -7,14 +7,18 @@ from discord.ext.commands.view import StringView
 
 from utils import parser, common, checks
 from utils.converters import NoDiscordChecker, NoTwitchChecker
+from utils.commands import command, group
+
 
 def setup(bot):
     bot.add_cog(CustomCommands(bot))
 
 class CustomCommands(commands.Cog):
+    HELP_REQUIRES = ["editor"]
     def __init__(self, bot):
         self.bot = bot
         self.system = bot.system
+        self.locale_name = bot.system.locale("Commands")
 
     async def process_commands(self, msg, command, view):
         await parser.parse(self.bot, msg, view, command.message, True)
@@ -47,9 +51,12 @@ class CustomCommands(commands.Cog):
                     if command.can_run_discord(message, user):
                         return await self.process_commands(message, command, view)
 
-    @commands.group(invoke_without_command=True, aliases=['commands'])
+    @group("command", invoke_without_command=True, aliases=['commands'])
     @checks.dpy_check_editor()
-    async def command(self, ctx):
+    async def command_(self, ctx):
+        """
+        allows you to set up custom commands.
+        """
         cmd_names = await self.system.db.fetch("SELECT name FROM commands")
         if not cmd_names:
             return await ctx.send(self.system.locale("No custom commands"))
@@ -57,13 +64,19 @@ class CustomCommands(commands.Cog):
         resp = "\n".join([f"- {x[0]}" for x in cmd_names])
         await ctx.paginate(resp, codeblocks=True)
 
-    @command.command()
+    @command_.command()
     @checks.dpy_check_editor()
     async def add(self, ctx, name,
                   nodiscord: Optional[NoDiscordChecker],
                   notwitch: Optional[NoTwitchChecker],
                   *, content):
-        command = common.CustomCommand.new(name, content, use_discord=not nodiscord, use_twitch=not notwitch)
+        if "--script" in content:
+            content = content.replace("--script", "")
+            isscript = True
+        else:
+            isscript = False
+
+        command = common.CustomCommand.new(name, content, use_discord=not nodiscord, use_twitch=not notwitch, isscript=isscript)
         try:
             await self.system.add_command(*command.save)
         except ValueError as e:
@@ -71,7 +84,7 @@ class CustomCommands(commands.Cog):
 
         await ctx.send(self.system.locale("Added command `{0}`").format(name))
 
-    @command.command()
+    @command_.command()
     @checks.dpy_check_editor()
     async def remove(self, ctx, name):
         command = await self.system.get_command(name)
@@ -85,7 +98,7 @@ class CustomCommands(commands.Cog):
 
         await ctx.send(self.system.locale("Command `{0}` deleted").format(name))
 
-    @command.command()
+    @command_.command()
     @checks.dpy_check_editor()
     async def edit(self, ctx, name, *, content):
         command = await self.system.get_command(name)
@@ -96,7 +109,7 @@ class CustomCommands(commands.Cog):
         await self.system.db.execute("UPDATE commands SET message = ? WHERE name = ?", content, name)
         await ctx.send(self.system.locale("Command updated successfully"))
 
-    @command.command()
+    @command_.command()
     @checks.dpy_check_editor()
     async def raw(self, ctx, name):
         command = await self.system.get_command(name)
@@ -105,7 +118,7 @@ class CustomCommands(commands.Cog):
 
         await ctx.send(command.message)
 
-    @command.group(invoke_without_command=True, aliases=['perms'])
+    @command_.group(invoke_without_command=True, aliases=['perms'])
     @checks.dpy_check_editor()
     async def permissions(self, ctx, name):
         command = await self.system.get_command(name)

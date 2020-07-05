@@ -10,11 +10,14 @@ import traceback
 import textwrap
 
 from utils.paginators import Timer
+from utils.commands import command, group
+
 
 def setup(bot):
     bot.add_cog(PyDev(bot))
 
 class PyDev(commands.Cog):
+    HELP_REQUIRES = ["hide"]
     def __init__(self, bot):
         self.bot = bot # type: commands.Bot
         self.core = bot.system
@@ -22,8 +25,9 @@ class PyDev(commands.Cog):
         self._evals = []
         self._timeout = 60
         self._send_in_codeblocks = True
+        self.locale_name = bot.system.locale("PyDev")
 
-    @commands.group(invoke_without_command=True)
+    @group(invoke_without_command=True)
     @commands.is_owner()
     async def dev(self, ctx):
         jsk = self.bot.get_command("jishaku")

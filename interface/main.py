@@ -115,7 +115,7 @@ class App(tkinter.Tk):
         name = self.server_name.get()
         for guild in bot.guilds:
             if guild.name == name.strip():
-                fmt = self.system.locale("Server name: {0}\nServer id: {2}\nServer Owner: {2}").format(guild.name, guild.id, guild.owner)
+                fmt = self.system.locale("Server name: {0}\nServer id: {1}\nServer Owner: {2}").format(guild.name, guild.id, guild.owner)
                 self.serversearch_text.set(self.system.locale("Connected to a server\n{0}").format(fmt))
                 self.system.config.set("general", "server_about", fmt)
                 self.system.config.set("general", "server_id", str(guild.id))

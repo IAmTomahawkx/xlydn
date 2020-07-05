@@ -9,8 +9,10 @@ def setup(bot):
     bot.add_cog(Handler(bot))
 
 class Handler(commands.Cog):
+    HELP_REQUIRES = ["hide"]
     def __init__(self, bot):
         self.bot = bot
+        self.locale_name = bot.system.locale("Handler")
 
     @commands.Cog.listener()
     async def on_error(self, exception):

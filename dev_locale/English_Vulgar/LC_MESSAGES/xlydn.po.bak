@@ -1,0 +1,1639 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"#-#-#-#-#  xlydn.po.bak (0.0.1)  #-#-#-#-#\n"
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: Tom\n"
+"POT-Creation-Date: 2020-06-29 14:52-0700\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: English_VulgarMIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: utils/bot.py:150 utils/bot.py:155 utils/bot.py:149 utils/bot.py:154
+#, python-brace-format
+msgid ""
+"Please go to {0} to establish a connection between discord and twitch for "
+"your user in this bot. You must have already linked your discord and twitch!"
+msgstr ""
+
+#: utils/bot.py:233 utils/bot.py:241 utils/bot.py:232 utils/bot.py:240
+#, python-brace-format
+msgid "Command `{0}` already exists"
+msgstr ""
+
+#: utils/bot.py:236 utils/bot.py:235
+msgid "Command name is a reserved word"
+msgstr ""
+
+#: utils/bot.py:246 utils/bot.py:245
+#, python-brace-format
+msgid "Command `{0}` does not exist"
+msgstr ""
+
+#: utils/dummy_locale.py:1 utils/dummy_locale.py:3 utils/dummy_locale.py:5
+msgid "removequote"
+msgstr ""
+
+#: utils/dummy_locale.py:2 utils/dummy_locale.py:4 utils/dummy_locale.py:6
+msgid "rmquote"
+msgstr ""
+
+#: utils/dummy_locale.py:7 utils/dummy_locale.py:26
+msgid "commands"
+msgstr ""
+
+#: utils/dummy_locale.py:8 utils/dummy_locale.py:17 utils/dummy_locale.py:27
+#: utils/dummy_locale.py:36
+msgid "perms"
+msgstr ""
+
+#: utils/dummy_locale.py:9 utils/dummy_locale.py:10 utils/dummy_locale.py:18
+#: utils/dummy_locale.py:19 utils/dummy_locale.py:28 utils/dummy_locale.py:29
+#: utils/dummy_locale.py:37 utils/dummy_locale.py:38
+msgid "+user"
+msgstr ""
+
+#: utils/dummy_locale.py:11 utils/dummy_locale.py:12 utils/dummy_locale.py:20
+#: utils/dummy_locale.py:21 utils/dummy_locale.py:30 utils/dummy_locale.py:31
+#: utils/dummy_locale.py:39 utils/dummy_locale.py:40
+msgid "-user"
+msgstr ""
+
+#: utils/dummy_locale.py:13 utils/dummy_locale.py:14 utils/dummy_locale.py:22
+#: utils/dummy_locale.py:23 utils/dummy_locale.py:32 utils/dummy_locale.py:33
+#: utils/dummy_locale.py:41 utils/dummy_locale.py:42
+msgid "+role"
+msgstr ""
+
+#: utils/dummy_locale.py:15 utils/dummy_locale.py:16 utils/dummy_locale.py:24
+#: utils/dummy_locale.py:25 utils/dummy_locale.py:34 utils/dummy_locale.py:35
+#: utils/dummy_locale.py:43 utils/dummy_locale.py:44
+msgid "-role"
+msgstr ""
+
+#: utils/time.py:130
+msgid "This time is in the past."
+msgstr ""
+
+#: utils/time.py:134
+msgid "Missing argument after the time."
+msgstr ""
+
+#: utils/time.py:170
+msgid "Time Error. try \"in an hour\" or \"5 days\"."
+msgstr ""
+
+#: utils/time.py:186
+msgid "Expected quote before time input..."
+msgstr ""
+
+#: utils/time.py:189
+msgid "If the time is quoted, you must unquote it."
+msgstr ""
+
+#: utils/time.py:219
+msgid " ago"
+msgstr ""
+
+#: utils/time.py:222
+msgid "year"
+msgstr ""
+
+#: utils/time.py:223
+msgid "month"
+msgstr ""
+
+#: utils/time.py:224 utils/time.py:236
+msgid "day"
+msgstr ""
+
+#: utils/time.py:225
+msgid "hour"
+msgstr ""
+
+#: utils/time.py:226
+msgid "minute"
+msgstr ""
+
+#: utils/time.py:227
+msgid "second"
+msgstr ""
+
+#: utils/time.py:241
+msgid "week"
+msgstr ""
+
+#: utils/time.py:257
+msgid "now"
+msgstr ""
+
+#: utils/time.py:260
+msgid "and"
+msgstr ""
+
+#: addons/twitch/quotes.py:18 addons/discord/quotes.py:25
+#: addons/discord/quotes.py:23
+msgid "Added quote"
+msgstr ""
+
+#: addons/twitch/quotes.py:23 addons/twitch/quotes.py:28
+#: addons/twitch/quotes.py:38 addons/twitch/quotes.py:43
+#: addons/discord/quotes.py:31 addons/discord/quotes.py:36
+#: addons/discord/quotes.py:46 addons/discord/quotes.py:51
+#: addons/discord/quotes.py:29 addons/discord/quotes.py:34
+#: addons/discord/quotes.py:44 addons/discord/quotes.py:49
+msgid "Please input a valid quote"
+msgstr ""
+
+#: addons/twitch/quotes.py:32 addons/discord/quotes.py:40
+#: addons/discord/quotes.py:38
+#, python-brace-format
+msgid "Removed quote {0}"
+msgstr ""
+
+#: addons/twitch/quotes.py:50 addons/discord/quotes.py:58
+#: addons/discord/quotes.py:56
+msgid "No quotes found"
+msgstr ""
+
+#: addons/twitch/commands.py:57 addons/discord/commands.py:59
+#: addons/discord/commands.py:57
+msgid "No custom commands"
+msgstr ""
+
+#: addons/twitch/commands.py:73 addons/discord/commands.py:76
+#: addons/discord/commands.py:74
+#, python-brace-format
+msgid "Added command `{0}`"
+msgstr ""
+
+#: addons/twitch/commands.py:80 addons/twitch/commands.py:94
+#: addons/twitch/commands.py:105 addons/twitch/commands.py:120
+#: addons/twitch/commands.py:137 addons/twitch/commands.py:156
+#: addons/twitch/commands.py:174 addons/discord/commands.py:83
+#: addons/discord/commands.py:97 addons/discord/commands.py:108
+#: addons/discord/commands.py:117 addons/discord/commands.py:171
+#: addons/discord/commands.py:187 addons/discord/commands.py:203
+#: addons/discord/commands.py:218 addons/discord/commands.py:233
+#: addons/discord/commands.py:248 addons/discord/commands.py:81
+#: addons/discord/commands.py:95 addons/discord/commands.py:106
+#: addons/discord/commands.py:115 addons/discord/commands.py:169
+#: addons/discord/commands.py:185 addons/discord/commands.py:201
+#: addons/discord/commands.py:216 addons/discord/commands.py:231
+#: addons/discord/commands.py:246
+#, python-brace-format
+msgid "Command `{0}` not found"
+msgstr ""
+
+#: addons/twitch/commands.py:87 addons/discord/commands.py:90
+#: addons/discord/commands.py:88
+#, python-brace-format
+msgid "Command `{0}` deleted"
+msgstr ""
+
+#: addons/twitch/commands.py:98 addons/discord/commands.py:101
+#: addons/discord/commands.py:99
+msgid "Command updated successfully"
+msgstr ""
+
+#: addons/twitch/commands.py:125 addons/discord/commands.py:176
+#: addons/discord/commands.py:174
+msgid "This user has already been added to the whitelist"
+msgstr ""
+
+#: addons/twitch/commands.py:129 addons/twitch/commands.py:164
+#: addons/discord/commands.py:180 addons/discord/commands.py:211
+#: addons/discord/commands.py:241 addons/discord/commands.py:178
+#: addons/discord/commands.py:209 addons/discord/commands.py:239
+#, python-brace-format
+msgid "Added {0} to the command whitelist"
+msgstr ""
+
+#: addons/twitch/commands.py:142 addons/discord/commands.py:192
+#: addons/discord/commands.py:190
+msgid "This user has not been added to the whitelist"
+msgstr ""
+
+#: addons/twitch/commands.py:146 addons/twitch/commands.py:182
+#: addons/discord/commands.py:196 addons/discord/commands.py:226
+#: addons/discord/commands.py:256 addons/discord/commands.py:194
+#: addons/discord/commands.py:224 addons/discord/commands.py:254
+#, python-brace-format
+msgid "Removed {0} from the command list"
+msgstr ""
+
+#: addons/twitch/commands.py:152 addons/twitch/commands.py:170
+#, python-brace-format
+msgid "{0} is not a valid role"
+msgstr ""
+
+#: addons/twitch/commands.py:160 addons/discord/commands.py:207
+#: addons/discord/commands.py:237 addons/discord/commands.py:205
+#: addons/discord/commands.py:235
+msgid "This role has already been added to the whitelist"
+msgstr ""
+
+#: addons/twitch/commands.py:178 addons/discord/commands.py:222
+#: addons/discord/commands.py:220
+msgid "This role has not been added to the whitelist"
+msgstr ""
+
+#: addons/twitch/misc.py:19
+msgid "You have already connected to a discord user!"
+msgstr ""
+
+#: addons/twitch/misc.py:25 addons/discord/misc.py:35 addons/discord/misc.py:32
+msgid "Uh oh! Looks like the website is currently offline! Try again later"
+msgstr ""
+
+#: addons/twitch/misc.py:36
+#, python-brace-format
+msgid "{0}, Successfully connected to {1} on discord"
+msgstr ""
+
+#: addons/twitch/misc.py:39
+#, python-brace-format
+msgid "{0}, failed to connect to a discord account"
+msgstr ""
+
+#: addons/discord/commands.py:21 addons/discord/commands.py:19
+msgid "Commands"
+msgstr ""
+
+#: addons/discord/commands.py:122 addons/discord/commands.py:120
+msgid "__**Users**__:\n"
+msgstr ""
+
+#: addons/discord/commands.py:136 addons/discord/commands.py:146
+#: addons/discord/commands.py:134 addons/discord/commands.py:144
+msgid "__**Discord Permissions**__:\n"
+msgstr ""
+
+#: addons/discord/commands.py:137 addons/discord/commands.py:157
+#: addons/discord/commands.py:135 addons/discord/commands.py:155
+msgid "*Roles*:\n"
+msgstr ""
+
+#: addons/discord/commands.py:148 addons/discord/commands.py:146
+msgid "*Channels*:\n"
+msgstr ""
+
+#: addons/discord/commands.py:156 addons/discord/commands.py:154
+msgid "__**Twitch Permissions**__:\n"
+msgstr ""
+
+#: addons/discord/commands.py:162 addons/discord/commands.py:160
+msgid "Anyone can use this command"
+msgstr ""
+
+#: addons/discord/commands.py:252 addons/discord/commands.py:250
+msgid "This channel has not been added to the whitelist"
+msgstr ""
+
+#: addons/discord/automod.py:21 addons/discord/automod.py:20
+msgid "This is not a valid url"
+msgstr ""
+
+#: addons/discord/automod.py:31
+msgid "AutoModeration"
+msgstr ""
+
+#: addons/discord/automod.py:52 addons/discord/automod.py:49
+#: addons/discord/automod.py:48
+#, python-brace-format
+msgid "Ad protection is now {0}"
+msgstr ""
+
+#: addons/discord/automod.py:52 addons/discord/automod.py:101
+#: addons/discord/automod.py:121 addons/discord/automod.py:141
+#: addons/discord/automod.py:49 addons/discord/automod.py:98
+#: addons/discord/automod.py:118 addons/discord/automod.py:138
+#: addons/discord/automod.py:48 addons/discord/automod.py:97
+#: addons/discord/automod.py:117 addons/discord/automod.py:137
+msgid "on"
+msgstr ""
+
+#: addons/discord/automod.py:52 addons/discord/automod.py:101
+#: addons/discord/automod.py:121 addons/discord/automod.py:141
+#: addons/discord/automod.py:49 addons/discord/automod.py:98
+#: addons/discord/automod.py:118 addons/discord/automod.py:138
+#: addons/discord/automod.py:48 addons/discord/automod.py:97
+#: addons/discord/automod.py:117 addons/discord/automod.py:137
+msgid "off"
+msgstr ""
+
+#: addons/discord/automod.py:56 addons/discord/automod.py:53
+#: addons/discord/automod.py:52
+msgid "Ad protection is enabled"
+msgstr ""
+
+#: addons/discord/automod.py:59 addons/discord/automod.py:56
+#: addons/discord/automod.py:55
+msgid "Ad protection is not enabled"
+msgstr ""
+
+#: addons/discord/automod.py:73 addons/discord/automod.py:70
+#: addons/discord/automod.py:69
+msgid "This domain has already been blacklisted"
+msgstr ""
+
+#: addons/discord/automod.py:76 addons/discord/automod.py:73
+#: addons/discord/automod.py:72
+#, python-brace-format
+msgid "Added {0} to the domain blacklist"
+msgstr ""
+
+#: addons/discord/automod.py:86 addons/discord/automod.py:83
+#: addons/discord/automod.py:82
+msgid "This domain is not blacklisted"
+msgstr ""
+
+#: addons/discord/automod.py:90 addons/discord/automod.py:87
+#: addons/discord/automod.py:86
+#, python-brace-format
+msgid "{0} is no longer blacklisted"
+msgstr ""
+
+#: addons/discord/automod.py:101 addons/discord/automod.py:98
+#: addons/discord/automod.py:97
+#, python-brace-format
+msgid "Spam protection is now {0}"
+msgstr ""
+
+#: addons/discord/automod.py:105 addons/discord/automod.py:102
+#: addons/discord/automod.py:101
+msgid "Spam protection is enabled"
+msgstr ""
+
+#: addons/discord/automod.py:108 addons/discord/automod.py:105
+#: addons/discord/automod.py:104
+msgid "Spam protection is not enabled"
+msgstr ""
+
+#: addons/discord/automod.py:121 addons/discord/automod.py:118
+#: addons/discord/automod.py:117
+#, python-brace-format
+msgid "Copypasta protection is now {0}"
+msgstr ""
+
+#: addons/discord/automod.py:125 addons/discord/automod.py:122
+#: addons/discord/automod.py:121
+msgid "Copypasta protection is enabled"
+msgstr ""
+
+#: addons/discord/automod.py:128 addons/discord/automod.py:125
+#: addons/discord/automod.py:124
+msgid "Copypasta protection is not enabled"
+msgstr ""
+
+#: addons/discord/automod.py:141 addons/discord/automod.py:138
+#: addons/discord/automod.py:137
+#, python-brace-format
+msgid "Mention spam protection is now {0}"
+msgstr ""
+
+#: addons/discord/automod.py:145 addons/discord/automod.py:142
+#: addons/discord/automod.py:141
+#, python-brace-format
+msgid "Mentioning {0} people will now trigger automod"
+msgstr ""
+
+#: addons/discord/automod.py:149 addons/discord/automod.py:146
+#: addons/discord/automod.py:145
+msgid "Mention spam protection is enabled"
+msgstr ""
+
+#: addons/discord/automod.py:152 addons/discord/automod.py:149
+#: addons/discord/automod.py:148
+msgid "Mention spam protection is not enabled"
+msgstr ""
+
+#: addons/discord/automod.py:183 addons/discord/automod.py:180
+#: addons/discord/automod.py:179
+#, python-brace-format
+msgid "Spamming {0} pings"
+msgstr ""
+
+#: addons/discord/automod.py:185 addons/discord/automod.py:182
+#: addons/discord/automod.py:181
+#, python-brace-format
+msgid "Added {0} strikes to {1} for spamming {2} mentions"
+msgstr ""
+
+#: addons/discord/automod.py:200 addons/discord/automod.py:214
+#: addons/discord/automod.py:197 addons/discord/automod.py:211
+#: addons/discord/automod.py:196 addons/discord/automod.py:210
+#, python-brace-format
+msgid "Spamming {0} messages in {1} seconds"
+msgstr ""
+
+#: addons/discord/automod.py:205 addons/discord/automod.py:218
+#: addons/discord/automod.py:202 addons/discord/automod.py:215
+#: addons/discord/automod.py:201 addons/discord/automod.py:214
+#, python-brace-format
+msgid "Added 1 strike to {0} for spamming {1} messages"
+msgstr ""
+
+#: addons/discord/automod.py:229 addons/discord/automod.py:226
+#: addons/discord/automod.py:225
+msgid "Copy pasta"
+msgstr ""
+
+#: addons/discord/automod.py:242 addons/discord/automod.py:239
+#: addons/discord/automod.py:238
+msgid "Advertising"
+msgstr ""
+
+#: addons/discord/pydev.py:28 addons/discord/pydev.py:26
+msgid "PyDev"
+msgstr ""
+
+#: addons/discord/misc.py:18 addons/discord/misc.py:15
+msgid "Misc"
+msgstr ""
+
+#: addons/discord/misc.py:29 addons/discord/misc.py:26
+#, python-brace-format
+msgid "You have already connected to {0}!"
+msgstr ""
+
+#: addons/discord/misc.py:42 addons/discord/misc.py:39
+#, python-brace-format
+msgid "{0}, Successfully connected to {1} on twitch"
+msgstr ""
+
+#: addons/discord/misc.py:45 addons/discord/misc.py:42
+#, python-brace-format
+msgid "{0}, failed to connect to a twitch account"
+msgstr ""
+
+#: addons/discord/help.py:10
+#, python-brace-format
+msgid "The command {0} does not exist"
+msgstr ""
+
+#: addons/discord/help.py:16
+#, python-brace-format
+msgid "Command \"{0}\" has no subcommand named {1}"
+msgstr ""
+
+#: addons/discord/help.py:18
+#, python-brace-format
+msgid "Command \"{0}\" has no subcommands."
+msgstr ""
+
+#: addons/discord/help.py:98
+msgid "Xlydn help"
+msgstr ""
+
+#: addons/discord/help.py:99
+msgid "__Help Categories__\n"
+msgstr ""
+
+#: addons/discord/help.py:113 addons/discord/help.py:131
+#, python-brace-format
+msgid "__{0} help__\n"
+msgstr ""
+
+#: addons/discord/help.py:135
+msgid "No help given..."
+msgstr ""
+
+#: addons/discord/handlers.py:15
+msgid "Handler"
+msgstr ""
+
+#: addons/discord/handlers.py:31
+#, python-brace-format
+msgid "Missing arguments! see `{0}`"
+msgstr ""
+
+#: addons/discord/handlers.py:35
+#, python-brace-format
+msgid "I'm missing permissions to run this command! I need {0}!"
+msgstr ""
+
+#: addons/discord/handlers.py:38
+msgid "You do not have permission to use this command"
+msgstr ""
+
+#: addons/discord/handlers.py:41
+msgid "Too many people are using this command at once"
+msgstr ""
+
+#: addons/discord/handlers.py:44
+#, python-brace-format
+msgid "This command is on cooldown for another {0} seconds"
+msgstr ""
+
+#: addons/discord/handlers.py:47
+msgid "You must own this bot to use this command"
+msgstr ""
+
+#: addons/discord/handlers.py:50
+msgid "This command can not be used in dms"
+msgstr ""
+
+#: addons/discord/currency.py:128 addons/discord/currency.py:125
+msgid "Currency"
+msgstr ""
+
+#: addons/discord/mod.py:35 addons/discord/mod.py:33
+msgid "Invalid action! Try 'tempmute', 'kick', 'tempban' or 'ban'"
+msgstr ""
+
+#: addons/discord/mod.py:78 addons/discord/mod.py:76
+#, python-brace-format
+msgid ""
+"`[{0}]` \\U0001f4f0 **{1}** removed {7} strikes from *{2}* ({3})\n"
+"[{4} → {5} Strikes] ` Reason ` {6}"
+msgstr ""
+
+#: addons/discord/mod.py:79 addons/discord/mod.py:84 addons/discord/mod.py:94
+#: addons/discord/mod.py:100 addons/discord/mod.py:107
+#: addons/discord/mod.py:114 addons/discord/mod.py:121
+#: addons/discord/mod.py:127 addons/discord/mod.py:227
+#: addons/discord/mod.py:261 addons/discord/mod.py:291 addons/discord/mod.py:77
+#: addons/discord/mod.py:82 addons/discord/mod.py:92 addons/discord/mod.py:98
+#: addons/discord/mod.py:105 addons/discord/mod.py:112
+#: addons/discord/mod.py:119 addons/discord/mod.py:125
+#: addons/discord/mod.py:225 addons/discord/mod.py:259
+#: addons/discord/mod.py:289
+msgid "None given"
+msgstr ""
+
+#: addons/discord/mod.py:83 addons/discord/mod.py:81
+#, python-brace-format
+msgid ""
+"`[{0}]` \\U0001f5de **{1}** gave {7} strikes to *{2}* ({3})\n"
+"[{4} → {5} Strikes] ` Reason ` {6}"
+msgstr ""
+
+#: addons/discord/mod.py:93 addons/discord/mod.py:91
+#, python-brace-format
+msgid ""
+"**Warning: failed to tempmute, invalid mute role**\n"
+"`[{0}]` \\U0001f910 **{1}** tempmuted *{2}* ({3})\n"
+"[{4} → {5} Strikes] ` Reason ` {6}"
+msgstr ""
+
+#: addons/discord/mod.py:99 addons/discord/mod.py:97
+#, python-brace-format
+msgid ""
+"`[{0}]` \\U0001f910 **{1}** tempmuted *{2}* ({3})\n"
+"[{4} → {5} Strikes] ` Reason ` {6}"
+msgstr ""
+
+#: addons/discord/mod.py:106 addons/discord/mod.py:104
+#, python-brace-format
+msgid ""
+"`[{0}]` \\U0001f462 **{1}** kicked *{2}* ({3})\n"
+"[{4} → {5} Strikes] ` Reason ` {6}"
+msgstr ""
+
+#: addons/discord/mod.py:113 addons/discord/mod.py:111
+#, python-brace-format
+msgid ""
+"`[{0}]` \\U0001fa93 **{1}** kicked *{2}* ({3})\n"
+"[{4} → {5} Strikes] ` Reason ` {6}"
+msgstr ""
+
+#: addons/discord/mod.py:120 addons/discord/mod.py:118
+#, python-brace-format
+msgid ""
+"`[{0}]` \\U0001f528 **{1}** tempbanned *{2}* ({3})\n"
+"[{4} → {5} Strikes] ` Reason ` {6}"
+msgstr ""
+
+#: addons/discord/mod.py:126 addons/discord/mod.py:124
+#, python-brace-format
+msgid ""
+"`[{0}]` \\U0001f528 **{1}** banned *{2}* ({3})\n"
+"[{4} → {5} Strikes] ` Reason ` {6}"
+msgstr ""
+
+#: addons/discord/mod.py:134 addons/discord/mod.py:132
+msgid "Moderation"
+msgstr ""
+
+#: addons/discord/mod.py:139 addons/discord/mod.py:137
+msgid "temp mute"
+msgstr ""
+
+#: addons/discord/mod.py:140 utils/dummy_locale.py:112
+#: utils/dummy_locale.py:231 addons/discord/mod.py:138
+#: utils/dummy_locale.py:611 utils/dummy_locale.py:23 utils/dummy_locale.py:19
+msgid "kick"
+msgstr ""
+
+#: addons/discord/mod.py:141 addons/discord/mod.py:139
+msgid "soft ban"
+msgstr ""
+
+#: addons/discord/mod.py:142 addons/discord/mod.py:140
+msgid "temp ban"
+msgstr ""
+
+#: addons/discord/mod.py:143 utils/dummy_locale.py:110
+#: utils/dummy_locale.py:229 addons/discord/mod.py:141
+#: utils/dummy_locale.py:607 utils/dummy_locale.py:18 utils/dummy_locale.py:12
+msgid "ban"
+msgstr ""
+
+#: addons/discord/mod.py:176 addons/discord/mod.py:185
+#: addons/discord/mod.py:174 addons/discord/mod.py:183
+msgid "No targets given to strike"
+msgstr ""
+
+#: addons/discord/mod.py:180 addons/discord/mod.py:178
+#, python-brace-format
+msgid "Added {0} strikes to {1}"
+msgstr ""
+
+#: addons/discord/mod.py:189 addons/discord/mod.py:187
+#, python-brace-format
+msgid "Removed {0} strikes from {1}"
+msgstr ""
+
+#: addons/discord/mod.py:199 addons/discord/mod.py:197
+msgid "Please respond with the duration this should last for"
+msgstr ""
+
+#: addons/discord/mod.py:205 addons/discord/mod.py:203
+#, python-brace-format
+msgid "`{0}` strikes will now be punished with a {1}"
+msgstr ""
+
+#: addons/discord/mod.py:208 addons/discord/mod.py:206
+msgid ", lasting "
+msgstr ""
+
+#: addons/discord/mod.py:215 addons/discord/mod.py:213
+#, python-brace-format
+msgid "Strike level {0} does not have a punishment"
+msgstr ""
+
+#: addons/discord/mod.py:222 addons/discord/mod.py:220
+#, python-brace-format
+msgid "Removed punishment for strike level {0}"
+msgstr ""
+
+#: addons/discord/mod.py:246 addons/discord/mod.py:244
+#, python-brace-format
+msgid ""
+"`[{0}]` \\U0001f528 **{1}** banned user with id `{2}`\n"
+"` Reason ` {3}"
+msgstr ""
+
+#: addons/discord/mod.py:250 addons/discord/mod.py:248
+#, python-brace-format
+msgid ""
+"`[{0}]` \\U0001f528 **{1}** banned *{2}* ({3})\n"
+"` Reason ` {4}"
+msgstr ""
+
+#: addons/discord/mod.py:265 addons/discord/mod.py:295
+#: addons/discord/mod.py:263 addons/discord/mod.py:293
+#, python-brace-format
+msgid "Couldn't ban {0} due to role hierarchy"
+msgstr ""
+
+#: addons/discord/mod.py:280 addons/discord/mod.py:309
+#: addons/discord/mod.py:278 addons/discord/mod.py:307
+#, python-brace-format
+msgid ""
+"`[{0}]` \\U0001fa93 **{1}** soft banned *{2}* ({3})\n"
+"` Reason ` {4}"
+msgstr ""
+
+#: interface/main.py:30
+msgid "Dashboard"
+msgstr ""
+
+#: interface/main.py:33
+msgid "command prefix"
+msgstr ""
+
+#: interface/main.py:49
+msgid "Not connected to a server"
+msgstr ""
+
+#: interface/main.py:53
+msgid "Discord bot token"
+msgstr ""
+
+#: interface/main.py:65
+msgid "Twitch Streamer token"
+msgstr ""
+
+#: interface/main.py:69 interface/main.py:81
+msgid "Connect"
+msgstr ""
+
+#: interface/main.py:70 interface/main.py:82
+msgid "Disconnect"
+msgstr ""
+
+#: interface/main.py:77
+msgid "Twitch Bot token"
+msgstr ""
+
+#: interface/main.py:91
+msgid "Search servers"
+msgstr ""
+
+#: interface/main.py:110
+msgid "Failed: Discord Bot is not connected!"
+msgstr ""
+
+#: interface/main.py:118
+#, python-brace-format
+msgid ""
+"Server name: {0}\n"
+"Server id: {2}\n"
+"Server Owner: {2}"
+msgstr ""
+
+#: interface/main.py:119
+#, python-brace-format
+msgid ""
+"Connected to a server\n"
+"{0}"
+msgstr ""
+
+#: interface/main.py:125
+#, python-brace-format
+msgid "No server found with the name \"{0}\""
+msgstr ""
+
+#: utils/dummy_locale.py:1 utils/dummy_locale.py:141 utils/dummy_locale.py:139
+#: utils/dummy_locale.py:121 utils/dummy_locale.py:378
+#: utils/dummy_locale.py:357 utils/dummy_locale.py:612
+#: utils/dummy_locale.py:231 utils/dummy_locale.py:16 utils/dummy_locale.py:29
+#: utils/dummy_locale.py:8 utils/dummy_locale.py:30
+msgid "addquote"
+msgstr "<@!455289384187592704>"
+
+#: utils/dummy_locale.py:2 utils/dummy_locale.py:3 utils/dummy_locale.py:4
+#: utils/dummy_locale.py:142 utils/dummy_locale.py:143
+#: utils/dummy_locale.py:144 utils/dummy_locale.py:140
+#: utils/dummy_locale.py:141 utils/dummy_locale.py:122
+#: utils/dummy_locale.py:123 utils/dummy_locale.py:124
+#: utils/dummy_locale.py:379 utils/dummy_locale.py:380
+#: utils/dummy_locale.py:381 utils/dummy_locale.py:359
+#: utils/dummy_locale.py:361 utils/dummy_locale.py:363
+#: utils/dummy_locale.py:613 utils/dummy_locale.py:614
+#: utils/dummy_locale.py:615 utils/dummy_locale.py:232
+#: utils/dummy_locale.py:233 utils/dummy_locale.py:234 utils/dummy_locale.py:11
+#: utils/dummy_locale.py:31 utils/dummy_locale.py:27
+msgid "deletequote"
+msgstr ""
+
+#: utils/dummy_locale.py:5 utils/dummy_locale.py:143 utils/dummy_locale.py:125
+#: utils/dummy_locale.py:382 utils/dummy_locale.py:365
+#: utils/dummy_locale.py:616 utils/dummy_locale.py:235 utils/dummy_locale.py:8
+#: utils/dummy_locale.py:28 utils/dummy_locale.py:1 utils/dummy_locale.py:29
+msgid "quote"
+msgstr "<@!455289384187592704>"
+
+#: utils/dummy_locale.py:6 utils/dummy_locale.py:37 utils/dummy_locale.py:146
+#: utils/dummy_locale.py:169 utils/dummy_locale.py:144
+#: utils/dummy_locale.py:167 utils/dummy_locale.py:126
+#: utils/dummy_locale.py:157 utils/dummy_locale.py:383
+#: utils/dummy_locale.py:406 utils/dummy_locale.py:367
+#: utils/dummy_locale.py:429 utils/dummy_locale.py:617
+#: utils/dummy_locale.py:640 utils/dummy_locale.py:236
+#: utils/dummy_locale.py:259 utils/dummy_locale.py:3 utils/dummy_locale.py:27
+#: utils/dummy_locale.py:24 utils/dummy_locale.py:28
+msgid "command"
+msgstr ""
+
+#: utils/dummy_locale.py:7 utils/dummy_locale.py:38 utils/dummy_locale.py:70
+#: utils/dummy_locale.py:147 utils/dummy_locale.py:170
+#: utils/dummy_locale.py:145 utils/dummy_locale.py:168
+#: utils/dummy_locale.py:127 utils/dummy_locale.py:158
+#: utils/dummy_locale.py:190 utils/dummy_locale.py:384
+#: utils/dummy_locale.py:407 utils/dummy_locale.py:369
+#: utils/dummy_locale.py:431 utils/dummy_locale.py:495
+#: utils/dummy_locale.py:618 utils/dummy_locale.py:641
+#: utils/dummy_locale.py:237 utils/dummy_locale.py:260
+msgid "add"
+msgstr ""
+
+#: utils/dummy_locale.py:8 utils/dummy_locale.py:39 utils/dummy_locale.py:71
+#: utils/dummy_locale.py:109 utils/dummy_locale.py:148
+#: utils/dummy_locale.py:171 utils/dummy_locale.py:146
+#: utils/dummy_locale.py:169 utils/dummy_locale.py:128
+#: utils/dummy_locale.py:159 utils/dummy_locale.py:191
+#: utils/dummy_locale.py:228 utils/dummy_locale.py:385
+#: utils/dummy_locale.py:408 utils/dummy_locale.py:371
+#: utils/dummy_locale.py:433 utils/dummy_locale.py:497
+#: utils/dummy_locale.py:605 utils/dummy_locale.py:619
+#: utils/dummy_locale.py:642 utils/dummy_locale.py:238
+#: utils/dummy_locale.py:261
+msgid "remove"
+msgstr ""
+
+#: utils/dummy_locale.py:9 utils/dummy_locale.py:40 utils/dummy_locale.py:149
+#: utils/dummy_locale.py:172 utils/dummy_locale.py:147
+#: utils/dummy_locale.py:170 utils/dummy_locale.py:129
+#: utils/dummy_locale.py:160 utils/dummy_locale.py:386
+#: utils/dummy_locale.py:409 utils/dummy_locale.py:373
+#: utils/dummy_locale.py:435 utils/dummy_locale.py:620
+#: utils/dummy_locale.py:643 utils/dummy_locale.py:239
+#: utils/dummy_locale.py:262
+msgid "edit"
+msgstr ""
+
+#: utils/dummy_locale.py:10 utils/dummy_locale.py:41 utils/dummy_locale.py:150
+#: utils/dummy_locale.py:173 utils/dummy_locale.py:148
+#: utils/dummy_locale.py:171 utils/dummy_locale.py:130
+#: utils/dummy_locale.py:161 utils/dummy_locale.py:387
+#: utils/dummy_locale.py:410 utils/dummy_locale.py:375
+#: utils/dummy_locale.py:437 utils/dummy_locale.py:621
+#: utils/dummy_locale.py:644 utils/dummy_locale.py:240
+#: utils/dummy_locale.py:263
+msgid "raw"
+msgstr ""
+
+#: utils/dummy_locale.py:11 utils/dummy_locale.py:24 utils/dummy_locale.py:42
+#: utils/dummy_locale.py:55 utils/dummy_locale.py:151 utils/dummy_locale.py:160
+#: utils/dummy_locale.py:174 utils/dummy_locale.py:183
+#: utils/dummy_locale.py:149 utils/dummy_locale.py:158
+#: utils/dummy_locale.py:172 utils/dummy_locale.py:181
+#: utils/dummy_locale.py:131 utils/dummy_locale.py:144
+#: utils/dummy_locale.py:162 utils/dummy_locale.py:175
+#: utils/dummy_locale.py:388 utils/dummy_locale.py:397
+#: utils/dummy_locale.py:411 utils/dummy_locale.py:420
+#: utils/dummy_locale.py:377 utils/dummy_locale.py:403
+#: utils/dummy_locale.py:439 utils/dummy_locale.py:465
+#: utils/dummy_locale.py:622 utils/dummy_locale.py:631
+#: utils/dummy_locale.py:645 utils/dummy_locale.py:654
+#: utils/dummy_locale.py:241 utils/dummy_locale.py:250
+#: utils/dummy_locale.py:264 utils/dummy_locale.py:273
+msgid "permissions"
+msgstr ""
+
+#: utils/dummy_locale.py:12 utils/dummy_locale.py:13 utils/dummy_locale.py:25
+#: utils/dummy_locale.py:26 utils/dummy_locale.py:43 utils/dummy_locale.py:44
+#: utils/dummy_locale.py:56 utils/dummy_locale.py:57 utils/dummy_locale.py:152
+#: utils/dummy_locale.py:153 utils/dummy_locale.py:161
+#: utils/dummy_locale.py:162 utils/dummy_locale.py:175
+#: utils/dummy_locale.py:176 utils/dummy_locale.py:184
+#: utils/dummy_locale.py:185 utils/dummy_locale.py:150
+#: utils/dummy_locale.py:151 utils/dummy_locale.py:159
+#: utils/dummy_locale.py:160 utils/dummy_locale.py:173
+#: utils/dummy_locale.py:174 utils/dummy_locale.py:182
+#: utils/dummy_locale.py:183 utils/dummy_locale.py:132
+#: utils/dummy_locale.py:133 utils/dummy_locale.py:145
+#: utils/dummy_locale.py:146 utils/dummy_locale.py:163
+#: utils/dummy_locale.py:164 utils/dummy_locale.py:177
+#: utils/dummy_locale.py:389 utils/dummy_locale.py:390
+#: utils/dummy_locale.py:398 utils/dummy_locale.py:399
+#: utils/dummy_locale.py:412 utils/dummy_locale.py:413
+#: utils/dummy_locale.py:421 utils/dummy_locale.py:422
+#: utils/dummy_locale.py:379 utils/dummy_locale.py:381
+#: utils/dummy_locale.py:405 utils/dummy_locale.py:407
+#: utils/dummy_locale.py:441 utils/dummy_locale.py:443
+#: utils/dummy_locale.py:467 utils/dummy_locale.py:469
+#: utils/dummy_locale.py:623 utils/dummy_locale.py:624
+#: utils/dummy_locale.py:632 utils/dummy_locale.py:633
+#: utils/dummy_locale.py:646 utils/dummy_locale.py:647
+#: utils/dummy_locale.py:655 utils/dummy_locale.py:656
+#: utils/dummy_locale.py:242 utils/dummy_locale.py:243
+#: utils/dummy_locale.py:251 utils/dummy_locale.py:252
+#: utils/dummy_locale.py:265 utils/dummy_locale.py:266
+#: utils/dummy_locale.py:274 utils/dummy_locale.py:275
+msgid "adduser"
+msgstr ""
+
+#: utils/dummy_locale.py:14 utils/dummy_locale.py:15 utils/dummy_locale.py:27
+#: utils/dummy_locale.py:28 utils/dummy_locale.py:45 utils/dummy_locale.py:46
+#: utils/dummy_locale.py:58 utils/dummy_locale.py:59 utils/dummy_locale.py:154
+#: utils/dummy_locale.py:155 utils/dummy_locale.py:163
+#: utils/dummy_locale.py:164 utils/dummy_locale.py:177
+#: utils/dummy_locale.py:178 utils/dummy_locale.py:186
+#: utils/dummy_locale.py:187 utils/dummy_locale.py:152
+#: utils/dummy_locale.py:153 utils/dummy_locale.py:161
+#: utils/dummy_locale.py:162 utils/dummy_locale.py:175
+#: utils/dummy_locale.py:176 utils/dummy_locale.py:184
+#: utils/dummy_locale.py:185 utils/dummy_locale.py:134
+#: utils/dummy_locale.py:135 utils/dummy_locale.py:147
+#: utils/dummy_locale.py:148 utils/dummy_locale.py:165
+#: utils/dummy_locale.py:166 utils/dummy_locale.py:179
+#: utils/dummy_locale.py:391 utils/dummy_locale.py:392
+#: utils/dummy_locale.py:400 utils/dummy_locale.py:401
+#: utils/dummy_locale.py:414 utils/dummy_locale.py:415
+#: utils/dummy_locale.py:423 utils/dummy_locale.py:424
+#: utils/dummy_locale.py:383 utils/dummy_locale.py:385
+#: utils/dummy_locale.py:409 utils/dummy_locale.py:411
+#: utils/dummy_locale.py:445 utils/dummy_locale.py:447
+#: utils/dummy_locale.py:471 utils/dummy_locale.py:473
+#: utils/dummy_locale.py:625 utils/dummy_locale.py:626
+#: utils/dummy_locale.py:634 utils/dummy_locale.py:635
+#: utils/dummy_locale.py:648 utils/dummy_locale.py:649
+#: utils/dummy_locale.py:657 utils/dummy_locale.py:658
+#: utils/dummy_locale.py:244 utils/dummy_locale.py:245
+#: utils/dummy_locale.py:253 utils/dummy_locale.py:254
+#: utils/dummy_locale.py:267 utils/dummy_locale.py:268
+#: utils/dummy_locale.py:276 utils/dummy_locale.py:277
+msgid "userremove"
+msgstr ""
+
+#: utils/dummy_locale.py:16 utils/dummy_locale.py:17 utils/dummy_locale.py:29
+#: utils/dummy_locale.py:30 utils/dummy_locale.py:47 utils/dummy_locale.py:48
+#: utils/dummy_locale.py:60 utils/dummy_locale.py:61 utils/dummy_locale.py:156
+#: utils/dummy_locale.py:157 utils/dummy_locale.py:165
+#: utils/dummy_locale.py:166 utils/dummy_locale.py:179
+#: utils/dummy_locale.py:180 utils/dummy_locale.py:188
+#: utils/dummy_locale.py:189 utils/dummy_locale.py:154
+#: utils/dummy_locale.py:155 utils/dummy_locale.py:163
+#: utils/dummy_locale.py:164 utils/dummy_locale.py:177
+#: utils/dummy_locale.py:178 utils/dummy_locale.py:186
+#: utils/dummy_locale.py:187 utils/dummy_locale.py:136
+#: utils/dummy_locale.py:137 utils/dummy_locale.py:149
+#: utils/dummy_locale.py:150 utils/dummy_locale.py:167
+#: utils/dummy_locale.py:168 utils/dummy_locale.py:181
+#: utils/dummy_locale.py:393 utils/dummy_locale.py:394
+#: utils/dummy_locale.py:402 utils/dummy_locale.py:403
+#: utils/dummy_locale.py:416 utils/dummy_locale.py:417
+#: utils/dummy_locale.py:425 utils/dummy_locale.py:426
+#: utils/dummy_locale.py:387 utils/dummy_locale.py:389
+#: utils/dummy_locale.py:413 utils/dummy_locale.py:415
+#: utils/dummy_locale.py:449 utils/dummy_locale.py:451
+#: utils/dummy_locale.py:475 utils/dummy_locale.py:477
+#: utils/dummy_locale.py:627 utils/dummy_locale.py:628
+#: utils/dummy_locale.py:636 utils/dummy_locale.py:637
+#: utils/dummy_locale.py:650 utils/dummy_locale.py:651
+#: utils/dummy_locale.py:659 utils/dummy_locale.py:660
+#: utils/dummy_locale.py:246 utils/dummy_locale.py:247
+#: utils/dummy_locale.py:255 utils/dummy_locale.py:256
+#: utils/dummy_locale.py:269 utils/dummy_locale.py:270
+#: utils/dummy_locale.py:278 utils/dummy_locale.py:279
+msgid "addrole"
+msgstr ""
+
+#: utils/dummy_locale.py:18 utils/dummy_locale.py:19 utils/dummy_locale.py:31
+#: utils/dummy_locale.py:32 utils/dummy_locale.py:49 utils/dummy_locale.py:50
+#: utils/dummy_locale.py:62 utils/dummy_locale.py:63 utils/dummy_locale.py:158
+#: utils/dummy_locale.py:159 utils/dummy_locale.py:167
+#: utils/dummy_locale.py:168 utils/dummy_locale.py:181
+#: utils/dummy_locale.py:182 utils/dummy_locale.py:190
+#: utils/dummy_locale.py:191 utils/dummy_locale.py:156
+#: utils/dummy_locale.py:157 utils/dummy_locale.py:165
+#: utils/dummy_locale.py:166 utils/dummy_locale.py:179
+#: utils/dummy_locale.py:180 utils/dummy_locale.py:188
+#: utils/dummy_locale.py:189 utils/dummy_locale.py:138
+#: utils/dummy_locale.py:139 utils/dummy_locale.py:151
+#: utils/dummy_locale.py:152 utils/dummy_locale.py:169
+#: utils/dummy_locale.py:170 utils/dummy_locale.py:183
+#: utils/dummy_locale.py:395 utils/dummy_locale.py:396
+#: utils/dummy_locale.py:404 utils/dummy_locale.py:405
+#: utils/dummy_locale.py:418 utils/dummy_locale.py:419
+#: utils/dummy_locale.py:427 utils/dummy_locale.py:428
+#: utils/dummy_locale.py:391 utils/dummy_locale.py:393
+#: utils/dummy_locale.py:417 utils/dummy_locale.py:453
+#: utils/dummy_locale.py:455 utils/dummy_locale.py:479
+#: utils/dummy_locale.py:481 utils/dummy_locale.py:629
+#: utils/dummy_locale.py:630 utils/dummy_locale.py:638
+#: utils/dummy_locale.py:639 utils/dummy_locale.py:652
+#: utils/dummy_locale.py:653 utils/dummy_locale.py:661
+#: utils/dummy_locale.py:662 utils/dummy_locale.py:248
+#: utils/dummy_locale.py:249 utils/dummy_locale.py:257
+#: utils/dummy_locale.py:258 utils/dummy_locale.py:271
+#: utils/dummy_locale.py:272 utils/dummy_locale.py:280
+#: utils/dummy_locale.py:281
+msgid "removerole"
+msgstr ""
+
+#: utils/dummy_locale.py:20 utils/dummy_locale.py:21 utils/dummy_locale.py:33
+#: utils/dummy_locale.py:34 utils/dummy_locale.py:51 utils/dummy_locale.py:52
+#: utils/dummy_locale.py:64 utils/dummy_locale.py:65 utils/dummy_locale.py:140
+#: utils/dummy_locale.py:141 utils/dummy_locale.py:153
+#: utils/dummy_locale.py:154 utils/dummy_locale.py:171
+#: utils/dummy_locale.py:172 utils/dummy_locale.py:184
+#: utils/dummy_locale.py:185 utils/dummy_locale.py:395
+#: utils/dummy_locale.py:397 utils/dummy_locale.py:421
+#: utils/dummy_locale.py:423 utils/dummy_locale.py:457
+#: utils/dummy_locale.py:459 utils/dummy_locale.py:483
+#: utils/dummy_locale.py:485
+msgid "addchannel"
+msgstr ""
+
+#: utils/dummy_locale.py:22 utils/dummy_locale.py:23 utils/dummy_locale.py:35
+#: utils/dummy_locale.py:36 utils/dummy_locale.py:53 utils/dummy_locale.py:54
+#: utils/dummy_locale.py:66 utils/dummy_locale.py:67 utils/dummy_locale.py:142
+#: utils/dummy_locale.py:143 utils/dummy_locale.py:155
+#: utils/dummy_locale.py:156 utils/dummy_locale.py:173
+#: utils/dummy_locale.py:174 utils/dummy_locale.py:186
+#: utils/dummy_locale.py:187 utils/dummy_locale.py:399
+#: utils/dummy_locale.py:401 utils/dummy_locale.py:425
+#: utils/dummy_locale.py:427 utils/dummy_locale.py:461
+#: utils/dummy_locale.py:463 utils/dummy_locale.py:487
+#: utils/dummy_locale.py:489
+msgid "removechannel"
+msgstr ""
+
+#: utils/dummy_locale.py:68 utils/dummy_locale.py:188 utils/dummy_locale.py:491
+#: utils/dummy_locale.py:14 utils/dummy_locale.py:25
+msgid "automod"
+msgstr ""
+
+#: utils/dummy_locale.py:69 utils/dummy_locale.py:189 utils/dummy_locale.py:493
+msgid "ads"
+msgstr ""
+
+#: utils/dummy_locale.py:72 utils/dummy_locale.py:192 utils/dummy_locale.py:499
+msgid "spam"
+msgstr ""
+
+#: utils/dummy_locale.py:73 utils/dummy_locale.py:193 utils/dummy_locale.py:501
+msgid "copypasta"
+msgstr ""
+
+#: utils/dummy_locale.py:74 utils/dummy_locale.py:194 utils/dummy_locale.py:503
+msgid "mentions"
+msgstr ""
+
+#: utils/dummy_locale.py:75 utils/dummy_locale.py:195 utils/dummy_locale.py:505
+#: utils/dummy_locale.py:25 utils/dummy_locale.py:20
+msgid "dev"
+msgstr ""
+
+#: utils/dummy_locale.py:76 utils/dummy_locale.py:77 utils/dummy_locale.py:196
+#: utils/dummy_locale.py:197 utils/dummy_locale.py:507
+#: utils/dummy_locale.py:509
+msgid "reload"
+msgstr ""
+
+#: utils/dummy_locale.py:78 utils/dummy_locale.py:198 utils/dummy_locale.py:511
+msgid "invite"
+msgstr ""
+
+#: utils/dummy_locale.py:79 utils/dummy_locale.py:199 utils/dummy_locale.py:513
+msgid "eval"
+msgstr ""
+
+#: utils/dummy_locale.py:80 utils/dummy_locale.py:81 utils/dummy_locale.py:200
+#: utils/dummy_locale.py:201 utils/dummy_locale.py:515
+#: utils/dummy_locale.py:517 utils/dummy_locale.py:26 utils/dummy_locale.py:14
+msgid "viewers"
+msgstr ""
+
+#: utils/dummy_locale.py:82 utils/dummy_locale.py:192 utils/dummy_locale.py:190
+#: utils/dummy_locale.py:202 utils/dummy_locale.py:429
+#: utils/dummy_locale.py:519 utils/dummy_locale.py:663
+#: utils/dummy_locale.py:282 utils/dummy_locale.py:12 utils/dummy_locale.py:30
+#: utils/dummy_locale.py:6 utils/dummy_locale.py:31
+msgid "link"
+msgstr ""
+
+#: utils/dummy_locale.py:83 utils/dummy_locale.py:203 utils/dummy_locale.py:521
+#: utils/dummy_locale.py:27 utils/dummy_locale.py:13
+msgid "help"
+msgstr ""
+
+#: utils/dummy_locale.py:84 utils/dummy_locale.py:204 utils/dummy_locale.py:523
+#: utils/dummy_locale.py:17 utils/dummy_locale.py:10
+msgid "settings"
+msgstr ""
+
+#: utils/dummy_locale.py:85 utils/dummy_locale.py:205 utils/dummy_locale.py:525
+#: utils/dummy_locale.py:19 utils/dummy_locale.py:15
+msgid "addpoints"
+msgstr ""
+
+#: utils/dummy_locale.py:86
+msgid "removepoints"
+msgstr ""
+
+#: utils/dummy_locale.py:87 utils/dummy_locale.py:88 utils/dummy_locale.py:206
+#: utils/dummy_locale.py:207 utils/dummy_locale.py:527
+#: utils/dummy_locale.py:535 utils/dummy_locale.py:21 utils/dummy_locale.py:11
+msgid "connect"
+msgstr ""
+
+#: utils/dummy_locale.py:89 utils/dummy_locale.py:90
+msgid "play"
+msgstr ""
+
+#: utils/dummy_locale.py:91
+msgid "pause"
+msgstr ""
+
+#: utils/dummy_locale.py:92
+msgid "resume"
+msgstr ""
+
+#: utils/dummy_locale.py:93 utils/dummy_locale.py:212 utils/dummy_locale.py:563
+#: utils/dummy_locale.py:4 utils/dummy_locale.py:26
+msgid "skip"
+msgstr ""
+
+#: utils/dummy_locale.py:94 utils/dummy_locale.py:95 utils/dummy_locale.py:96
+#: utils/dummy_locale.py:213 utils/dummy_locale.py:214
+#: utils/dummy_locale.py:215 utils/dummy_locale.py:565
+#: utils/dummy_locale.py:567 utils/dummy_locale.py:569 utils/dummy_locale.py:7
+#: utils/dummy_locale.py:27
+msgid "queue"
+msgstr ""
+
+#: utils/dummy_locale.py:97 utils/dummy_locale.py:98 utils/dummy_locale.py:99
+#: utils/dummy_locale.py:100 utils/dummy_locale.py:101
+#: utils/dummy_locale.py:216 utils/dummy_locale.py:217
+#: utils/dummy_locale.py:218 utils/dummy_locale.py:219
+#: utils/dummy_locale.py:220 utils/dummy_locale.py:571
+#: utils/dummy_locale.py:573 utils/dummy_locale.py:575
+#: utils/dummy_locale.py:577 utils/dummy_locale.py:579 utils/dummy_locale.py:9
+#: utils/dummy_locale.py:2
+msgid "now_playing"
+msgstr ""
+
+#: utils/dummy_locale.py:102 utils/dummy_locale.py:103
+msgid "volume"
+msgstr ""
+
+#: utils/dummy_locale.py:104
+msgid "stop"
+msgstr ""
+
+#: utils/dummy_locale.py:105 utils/dummy_locale.py:224
+#: utils/dummy_locale.py:597 utils/dummy_locale.py:6 utils/dummy_locale.py:23
+msgid "strike"
+msgstr ""
+
+#: utils/dummy_locale.py:106 utils/dummy_locale.py:225
+#: utils/dummy_locale.py:599 utils/dummy_locale.py:5 utils/dummy_locale.py:17
+msgid "pardon"
+msgstr ""
+
+#: utils/dummy_locale.py:107 utils/dummy_locale.py:226
+#: utils/dummy_locale.py:601 utils/dummy_locale.py:10 utils/dummy_locale.py:5
+msgid "strike-config"
+msgstr ""
+
+#: utils/dummy_locale.py:108 utils/dummy_locale.py:227
+#: utils/dummy_locale.py:603
+msgid "action"
+msgstr ""
+
+#: utils/dummy_locale.py:111 utils/dummy_locale.py:230
+#: utils/dummy_locale.py:609 utils/dummy_locale.py:20 utils/dummy_locale.py:16
+msgid "softban"
+msgstr ""
+
+#: utils/dummy_locale.py:113 utils/dummy_locale.py:112
+#: utils/dummy_locale.py:351 utils/dummy_locale.py:494
+msgid ""
+"enable/disable ad protection (discord links, domains set). Automod will give "
+"strikes, so be sure your moderation system is set up."
+msgstr ""
+
+#: utils/dummy_locale.py:114 utils/dummy_locale.py:113
+#: utils/dummy_locale.py:352 utils/dummy_locale.py:496
+msgid "adds a domain to the blacklist"
+msgstr ""
+
+#: utils/dummy_locale.py:115 utils/dummy_locale.py:114
+#: utils/dummy_locale.py:353 utils/dummy_locale.py:498
+msgid "removes a domain from the blacklist"
+msgstr ""
+
+#: utils/dummy_locale.py:116 utils/dummy_locale.py:115
+#: utils/dummy_locale.py:354 utils/dummy_locale.py:500
+msgid ""
+"enable/disable spam protection. Automod will give strikes, so be sure your "
+"moderation system is set up."
+msgstr ""
+
+#: utils/dummy_locale.py:117 utils/dummy_locale.py:116
+#: utils/dummy_locale.py:355 utils/dummy_locale.py:502
+msgid ""
+"enable/disable copypasta protection. Automod will give strikes, so be sure "
+"your moderation system is set up."
+msgstr ""
+
+#: utils/dummy_locale.py:118 utils/dummy_locale.py:117
+#: utils/dummy_locale.py:356 utils/dummy_locale.py:504
+msgid ""
+"enable/disable mention spam protection. Automod will give strikes, so be "
+"sure your moderation system is set up."
+msgstr ""
+
+#: utils/dummy_locale.py:119 utils/dummy_locale.py:118
+#: utils/dummy_locale.py:357 utils/dummy_locale.py:512
+msgid "creates an invite link for the bot"
+msgstr ""
+
+#: utils/dummy_locale.py:120 utils/dummy_locale.py:119
+#: utils/dummy_locale.py:358 utils/dummy_locale.py:514
+msgid ""
+"evaluates some code. Do not run this unless you know what you are doing!"
+msgstr ""
+
+#: utils/dummy_locale.py:121 utils/dummy_locale.py:120
+#: utils/dummy_locale.py:359 utils/dummy_locale.py:522
+msgid "Shows this message"
+msgstr ""
+
+#: utils/dummy_locale.py:122 utils/dummy_locale.py:121
+#: utils/dummy_locale.py:360 utils/dummy_locale.py:524
+msgid "shows the currency settings"
+msgstr ""
+
+#: utils/dummy_locale.py:123 utils/dummy_locale.py:124
+#: utils/dummy_locale.py:122 utils/dummy_locale.py:361
+#: utils/dummy_locale.py:362 utils/dummy_locale.py:528
+#: utils/dummy_locale.py:536
+msgid ""
+"Connect to voice.\n"
+"Parameters\n"
+"------------\n"
+"channel: discord.VoiceChannel [Optional]\n"
+"    The channel to connect to. If a channel is not specified, an attempt to "
+"join the voice channel you are in\n"
+"    will be made.\n"
+"This command also handles moving the bot to different channels."
+msgstr ""
+
+#: utils/dummy_locale.py:125 utils/dummy_locale.py:126
+#: utils/dummy_locale.py:124 utils/dummy_locale.py:363
+#: utils/dummy_locale.py:364 utils/dummy_locale.py:544
+#: utils/dummy_locale.py:552
+msgid ""
+"Request a song and add it to the queue.\n"
+"This command attempts to join a valid voice channel if the bot is not "
+"already in one.\n"
+"Uses YTDL to automatically search and retrieve a song.\n"
+"Parameters\n"
+"------------\n"
+"search: str [Required]\n"
+"    The song to search and retrieve using YTDL. This could be a simple "
+"search, an ID or URL."
+msgstr ""
+
+#: utils/dummy_locale.py:127 utils/dummy_locale.py:126
+#: utils/dummy_locale.py:365 utils/dummy_locale.py:560
+msgid "Pause the currently playing song."
+msgstr ""
+
+#: utils/dummy_locale.py:128 utils/dummy_locale.py:127
+#: utils/dummy_locale.py:366 utils/dummy_locale.py:562
+msgid "Resume the currently paused song."
+msgstr ""
+
+#: utils/dummy_locale.py:129 utils/dummy_locale.py:128
+#: utils/dummy_locale.py:367 utils/dummy_locale.py:564
+msgid "Skip the song."
+msgstr ""
+
+#: utils/dummy_locale.py:130 utils/dummy_locale.py:131
+#: utils/dummy_locale.py:132 utils/dummy_locale.py:129
+#: utils/dummy_locale.py:368 utils/dummy_locale.py:369
+#: utils/dummy_locale.py:370 utils/dummy_locale.py:566
+#: utils/dummy_locale.py:568 utils/dummy_locale.py:570
+msgid "Retrieve a basic queue of upcoming songs."
+msgstr ""
+
+#: utils/dummy_locale.py:133 utils/dummy_locale.py:134
+#: utils/dummy_locale.py:135 utils/dummy_locale.py:136
+#: utils/dummy_locale.py:137 utils/dummy_locale.py:132
+#: utils/dummy_locale.py:371 utils/dummy_locale.py:372
+#: utils/dummy_locale.py:373 utils/dummy_locale.py:374
+#: utils/dummy_locale.py:375 utils/dummy_locale.py:572
+#: utils/dummy_locale.py:574 utils/dummy_locale.py:576
+#: utils/dummy_locale.py:578 utils/dummy_locale.py:580
+msgid "Display information about the currently playing song."
+msgstr ""
+
+#: utils/dummy_locale.py:138 utils/dummy_locale.py:139
+#: utils/dummy_locale.py:137 utils/dummy_locale.py:376
+#: utils/dummy_locale.py:377 utils/dummy_locale.py:582
+#: utils/dummy_locale.py:588
+msgid ""
+"Change the player volume.\n"
+"Parameters\n"
+"------------\n"
+"volume: float or int [Required]\n"
+"    The volume to set the player to in percentage. This must be between 1 "
+"and 100."
+msgstr ""
+
+#: utils/dummy_locale.py:140 utils/dummy_locale.py:139
+#: utils/dummy_locale.py:378 utils/dummy_locale.py:594
+msgid ""
+"Stop the currently playing song and destroy the player.\n"
+"!Warning!\n"
+"    This will destroy the player assigned to your guild, also deleting any "
+"queued songs and settings."
+msgstr ""
+
+#: addons/discord/automod.py:31 addons/discord/automod.py:30
+msgid "Automod"
+msgstr ""
+
+#: utils/dummy_locale.py:231 utils/dummy_locale.py:291 utils/dummy_locale.py:2
+#: utils/dummy_locale.py:180
+msgid ""
+"The Jishaku debug and diagnostic commands.\n"
+"\n"
+"This command on its own gives a status brief.\n"
+"All other functionality is within its subcommands."
+msgstr ""
+
+#: utils/dummy_locale.py:232 utils/dummy_locale.py:292 utils/dummy_locale.py:7
+#: utils/dummy_locale.py:185
+msgid "Hides Jishaku from the help command."
+msgstr ""
+
+#: utils/dummy_locale.py:233 utils/dummy_locale.py:293 utils/dummy_locale.py:9
+#: utils/dummy_locale.py:187
+msgid "Shows Jishaku in the help command."
+msgstr ""
+
+#: utils/dummy_locale.py:234 utils/dummy_locale.py:294 utils/dummy_locale.py:11
+#: utils/dummy_locale.py:189
+msgid "Shows the currently running jishaku tasks."
+msgstr ""
+
+#: utils/dummy_locale.py:235 utils/dummy_locale.py:295 utils/dummy_locale.py:13
+#: utils/dummy_locale.py:191
+msgid ""
+"Cancels a task with the given index.\n"
+"\n"
+"If the index passed is -1, will cancel the last task instead."
+msgstr ""
+
+#: utils/dummy_locale.py:236 utils/dummy_locale.py:237
+#: utils/dummy_locale.py:296 utils/dummy_locale.py:297 utils/dummy_locale.py:17
+#: utils/dummy_locale.py:21 utils/dummy_locale.py:195 utils/dummy_locale.py:199
+msgid ""
+"Loads or reloads the given extension names.\n"
+"\n"
+"Reports any extensions that failed to load."
+msgstr ""
+
+#: utils/dummy_locale.py:238 utils/dummy_locale.py:298 utils/dummy_locale.py:25
+#: utils/dummy_locale.py:203
+msgid ""
+"Unloads the given extension names.\n"
+"\n"
+"Reports any extensions that failed to unload."
+msgstr ""
+
+#: utils/dummy_locale.py:239 utils/dummy_locale.py:240
+#: utils/dummy_locale.py:299 utils/dummy_locale.py:300 utils/dummy_locale.py:29
+#: utils/dummy_locale.py:31 utils/dummy_locale.py:207 utils/dummy_locale.py:209
+msgid "Logs this bot out."
+msgstr ""
+
+#: utils/dummy_locale.py:241 utils/dummy_locale.py:301 utils/dummy_locale.py:33
+#: utils/dummy_locale.py:211
+msgid ""
+"Run a command as someone else.\n"
+"\n"
+"This will try to resolve to a Member, but will use a User if it can't find "
+"one."
+msgstr ""
+
+#: utils/dummy_locale.py:242 utils/dummy_locale.py:302 utils/dummy_locale.py:37
+#: utils/dummy_locale.py:215
+msgid "Run a command as if it were run in a different channel."
+msgstr ""
+
+#: utils/dummy_locale.py:243 utils/dummy_locale.py:303 utils/dummy_locale.py:39
+#: utils/dummy_locale.py:217
+msgid ""
+"Run a command bypassing all checks and cooldowns.\n"
+"\n"
+"This also bypasses permission checks so this has a high possibility of "
+"making commands raise exceptions."
+msgstr ""
+
+#: utils/dummy_locale.py:244 utils/dummy_locale.py:304 utils/dummy_locale.py:43
+#: utils/dummy_locale.py:221
+msgid ""
+"Runs a command multiple times in a row.\n"
+"\n"
+"This acts like the command was invoked several times manually, so it obeys "
+"cooldowns.\n"
+"You can use this in conjunction with `jsk sudo` to bypass this."
+msgstr ""
+
+#: utils/dummy_locale.py:245 utils/dummy_locale.py:246
+#: utils/dummy_locale.py:305 utils/dummy_locale.py:306 utils/dummy_locale.py:48
+#: utils/dummy_locale.py:50 utils/dummy_locale.py:226 utils/dummy_locale.py:228
+msgid "Run a command timing execution and catching exceptions."
+msgstr ""
+
+#: utils/dummy_locale.py:247 utils/dummy_locale.py:307 utils/dummy_locale.py:52
+#: utils/dummy_locale.py:230
+msgid ""
+"Read out a file, using syntax highlighting if detected.\n"
+"\n"
+"Lines and linespans are supported by adding '#L12' or '#L12-14' etc to the "
+"end of the filename."
+msgstr ""
+
+#: utils/dummy_locale.py:248 utils/dummy_locale.py:308 utils/dummy_locale.py:56
+#: utils/dummy_locale.py:234
+msgid ""
+"Download and display a text file from the internet.\n"
+"\n"
+"This command is similar to jsk cat, but accepts a URL."
+msgstr ""
+
+#: utils/dummy_locale.py:249 utils/dummy_locale.py:250
+#: utils/dummy_locale.py:309 utils/dummy_locale.py:310 utils/dummy_locale.py:60
+#: utils/dummy_locale.py:62 utils/dummy_locale.py:238 utils/dummy_locale.py:240
+msgid "Displays the source code for a command."
+msgstr ""
+
+#: utils/dummy_locale.py:251 utils/dummy_locale.py:311 utils/dummy_locale.py:64
+#: utils/dummy_locale.py:242
+msgid ""
+"Turn variable retention for REPL on or off.\n"
+"\n"
+"Provide no argument for current status."
+msgstr ""
+
+#: utils/dummy_locale.py:252 utils/dummy_locale.py:253
+#: utils/dummy_locale.py:312 utils/dummy_locale.py:313 utils/dummy_locale.py:68
+#: utils/dummy_locale.py:70 utils/dummy_locale.py:246 utils/dummy_locale.py:248
+msgid "Direct evaluation of Python code."
+msgstr ""
+
+#: utils/dummy_locale.py:254 utils/dummy_locale.py:255
+#: utils/dummy_locale.py:256 utils/dummy_locale.py:257
+#: utils/dummy_locale.py:314 utils/dummy_locale.py:315
+#: utils/dummy_locale.py:316 utils/dummy_locale.py:317 utils/dummy_locale.py:72
+#: utils/dummy_locale.py:74 utils/dummy_locale.py:76 utils/dummy_locale.py:78
+#: utils/dummy_locale.py:250 utils/dummy_locale.py:252
+msgid "Evaluation of Python code with inspect information."
+msgstr ""
+
+#: utils/dummy_locale.py:258 utils/dummy_locale.py:259
+#: utils/dummy_locale.py:318 utils/dummy_locale.py:319 utils/dummy_locale.py:80
+#: utils/dummy_locale.py:85 utils/dummy_locale.py:263
+msgid ""
+"Executes statements in the system shell.\n"
+"\n"
+"This uses the system shell as defined in $SHELL, or `/bin/bash` otherwise.\n"
+"Execution can be cancelled by closing the paginator."
+msgstr ""
+
+#: utils/dummy_locale.py:260 utils/dummy_locale.py:320 utils/dummy_locale.py:90
+#: utils/dummy_locale.py:268
+msgid "Shortcut for 'jsk sh git'. Invokes the system shell."
+msgstr ""
+
+#: utils/dummy_locale.py:261 utils/dummy_locale.py:276
+#: utils/dummy_locale.py:321 utils/dummy_locale.py:336 utils/dummy_locale.py:92
+#: utils/dummy_locale.py:136 utils/dummy_locale.py:270
+#: utils/dummy_locale.py:314
+msgid ""
+"Voice-related commands.\n"
+"\n"
+"If invoked without subcommand, relays current voice state."
+msgstr ""
+
+#: utils/dummy_locale.py:262 utils/dummy_locale.py:263
+#: utils/dummy_locale.py:277 utils/dummy_locale.py:278
+#: utils/dummy_locale.py:322 utils/dummy_locale.py:323
+#: utils/dummy_locale.py:337 utils/dummy_locale.py:338 utils/dummy_locale.py:96
+#: utils/dummy_locale.py:102 utils/dummy_locale.py:140
+#: utils/dummy_locale.py:146 utils/dummy_locale.py:274
+#: utils/dummy_locale.py:280 utils/dummy_locale.py:318
+#: utils/dummy_locale.py:324
+msgid ""
+"Joins a voice channel, or moves to it if already connected.\n"
+"\n"
+"Passing a voice channel uses that voice channel.\n"
+"Passing a member will use that member's current voice channel.\n"
+"Passing nothing will use the author's voice channel."
+msgstr ""
+
+#: utils/dummy_locale.py:264 utils/dummy_locale.py:265
+#: utils/dummy_locale.py:279 utils/dummy_locale.py:280
+#: utils/dummy_locale.py:324 utils/dummy_locale.py:325
+#: utils/dummy_locale.py:339 utils/dummy_locale.py:340
+#: utils/dummy_locale.py:108 utils/dummy_locale.py:110
+#: utils/dummy_locale.py:152 utils/dummy_locale.py:154
+#: utils/dummy_locale.py:286 utils/dummy_locale.py:288
+#: utils/dummy_locale.py:330 utils/dummy_locale.py:332
+msgid "Disconnects from the voice channel in this guild, if there is one."
+msgstr ""
+
+#: utils/dummy_locale.py:266 utils/dummy_locale.py:281
+#: utils/dummy_locale.py:326 utils/dummy_locale.py:341
+#: utils/dummy_locale.py:112 utils/dummy_locale.py:156
+#: utils/dummy_locale.py:290 utils/dummy_locale.py:334
+msgid "Stops running an audio source, if there is one."
+msgstr ""
+
+#: utils/dummy_locale.py:267 utils/dummy_locale.py:282
+#: utils/dummy_locale.py:327 utils/dummy_locale.py:342
+#: utils/dummy_locale.py:114 utils/dummy_locale.py:158
+#: utils/dummy_locale.py:292 utils/dummy_locale.py:336
+msgid "Pauses a running audio source, if there is one."
+msgstr ""
+
+#: utils/dummy_locale.py:268 utils/dummy_locale.py:283
+#: utils/dummy_locale.py:328 utils/dummy_locale.py:343
+#: utils/dummy_locale.py:116 utils/dummy_locale.py:160
+#: utils/dummy_locale.py:294 utils/dummy_locale.py:338
+msgid "Resumes a running audio source, if there is one."
+msgstr ""
+
+#: utils/dummy_locale.py:269 utils/dummy_locale.py:284
+#: utils/dummy_locale.py:329 utils/dummy_locale.py:344
+#: utils/dummy_locale.py:118 utils/dummy_locale.py:162
+#: utils/dummy_locale.py:296 utils/dummy_locale.py:340
+msgid "Adjusts the volume of an audio source if it is supported."
+msgstr ""
+
+#: utils/dummy_locale.py:270 utils/dummy_locale.py:271
+#: utils/dummy_locale.py:285 utils/dummy_locale.py:286
+#: utils/dummy_locale.py:330 utils/dummy_locale.py:331
+#: utils/dummy_locale.py:345 utils/dummy_locale.py:346
+#: utils/dummy_locale.py:120 utils/dummy_locale.py:124
+#: utils/dummy_locale.py:164 utils/dummy_locale.py:168
+#: utils/dummy_locale.py:298 utils/dummy_locale.py:302
+#: utils/dummy_locale.py:342
+msgid ""
+"Plays audio direct from a URI.\n"
+"\n"
+"Can be either a local file or an audio resource on the internet."
+msgstr ""
+
+#: utils/dummy_locale.py:272 utils/dummy_locale.py:273
+#: utils/dummy_locale.py:274 utils/dummy_locale.py:275
+#: utils/dummy_locale.py:287 utils/dummy_locale.py:288
+#: utils/dummy_locale.py:289 utils/dummy_locale.py:290
+#: utils/dummy_locale.py:332 utils/dummy_locale.py:333
+#: utils/dummy_locale.py:334 utils/dummy_locale.py:335
+#: utils/dummy_locale.py:347 utils/dummy_locale.py:348
+#: utils/dummy_locale.py:349 utils/dummy_locale.py:350
+#: utils/dummy_locale.py:128 utils/dummy_locale.py:130
+#: utils/dummy_locale.py:132 utils/dummy_locale.py:134
+#: utils/dummy_locale.py:172 utils/dummy_locale.py:174
+#: utils/dummy_locale.py:176 utils/dummy_locale.py:178
+#: utils/dummy_locale.py:306 utils/dummy_locale.py:308
+#: utils/dummy_locale.py:310 utils/dummy_locale.py:312
+#: utils/dummy_locale.py:352 utils/dummy_locale.py:354
+#: utils/dummy_locale.py:356
+msgid "Plays audio from youtube_dl-compatible sources."
+msgstr ""
+
+#: utils/dummy_locale.py:358 utils/dummy_locale.py:360
+#: utils/dummy_locale.py:362 utils/dummy_locale.py:364
+#: utils/dummy_locale.py:366 utils/dummy_locale.py:368
+#: utils/dummy_locale.py:370 utils/dummy_locale.py:372
+#: utils/dummy_locale.py:374 utils/dummy_locale.py:376
+#: utils/dummy_locale.py:378 utils/dummy_locale.py:380
+#: utils/dummy_locale.py:382 utils/dummy_locale.py:384
+#: utils/dummy_locale.py:386 utils/dummy_locale.py:388
+#: utils/dummy_locale.py:390 utils/dummy_locale.py:392
+#: utils/dummy_locale.py:394 utils/dummy_locale.py:396
+#: utils/dummy_locale.py:398 utils/dummy_locale.py:400
+#: utils/dummy_locale.py:402 utils/dummy_locale.py:404
+#: utils/dummy_locale.py:406 utils/dummy_locale.py:408
+#: utils/dummy_locale.py:410 utils/dummy_locale.py:412
+#: utils/dummy_locale.py:414 utils/dummy_locale.py:416
+#: utils/dummy_locale.py:418 utils/dummy_locale.py:420
+#: utils/dummy_locale.py:422 utils/dummy_locale.py:424
+#: utils/dummy_locale.py:426 utils/dummy_locale.py:428
+#: utils/dummy_locale.py:430 utils/dummy_locale.py:432
+#: utils/dummy_locale.py:434 utils/dummy_locale.py:436
+#: utils/dummy_locale.py:438 utils/dummy_locale.py:440
+#: utils/dummy_locale.py:442 utils/dummy_locale.py:444
+#: utils/dummy_locale.py:446 utils/dummy_locale.py:448
+#: utils/dummy_locale.py:450 utils/dummy_locale.py:452
+#: utils/dummy_locale.py:454 utils/dummy_locale.py:456
+#: utils/dummy_locale.py:458 utils/dummy_locale.py:460
+#: utils/dummy_locale.py:462 utils/dummy_locale.py:464
+#: utils/dummy_locale.py:466 utils/dummy_locale.py:468
+#: utils/dummy_locale.py:470 utils/dummy_locale.py:472
+#: utils/dummy_locale.py:474 utils/dummy_locale.py:476
+#: utils/dummy_locale.py:478 utils/dummy_locale.py:480
+#: utils/dummy_locale.py:482 utils/dummy_locale.py:484
+#: utils/dummy_locale.py:486 utils/dummy_locale.py:488
+#: utils/dummy_locale.py:490 utils/dummy_locale.py:492
+#: utils/dummy_locale.py:506 utils/dummy_locale.py:508
+#: utils/dummy_locale.py:510 utils/dummy_locale.py:516
+#: utils/dummy_locale.py:518 utils/dummy_locale.py:520
+#: utils/dummy_locale.py:526 utils/dummy_locale.py:598
+#: utils/dummy_locale.py:600 utils/dummy_locale.py:602
+#: utils/dummy_locale.py:604 utils/dummy_locale.py:606
+#: utils/dummy_locale.py:608 utils/dummy_locale.py:610
+#: utils/dummy_locale.py:612
+msgid "None"
+msgstr ""
