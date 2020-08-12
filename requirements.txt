@@ -7,7 +7,9 @@ psutil
 requests
 colorama
 jishaku
-youtube_dl
 git+https://github.com/IAmTomahawkx/pyk
 parsedatetime
 python-dateutil
+PyQt5
+PyQt5-Stubs
+git+https://github.com/ShineyDev/prettify.py.git

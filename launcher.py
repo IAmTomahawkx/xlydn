@@ -9,16 +9,15 @@ from concurrent.futures import ThreadPoolExecutor
 import discord
 import twitchio
 import colorama
+import prettify_exceptions
+
 
 from utils.bot import System
 
+prettify_exceptions.hook()
 colorama.init()
 
 __VERSION__ = "0.0.1"
-
-def run_forever(**kwargs):
-    bot = System(config, **kwargs)
-    bot.run()
 
 config = configparser.ConfigParser(allow_no_value=True, interpolation=None)
 config.read("config.ini")
@@ -52,6 +51,13 @@ def startup_data():
 
 if __name__ == "__main__":
     startup_data()
-    run_forever()
+    bot = System(config)
+    if "--ci-build" in sys.argv:
+        # load the modules, but dont actually run the bots
+        bot.twitch_bot.load(ci=True)
+        bot.discord_bot.load(ci=True)
+
+    else:
+        bot.run()
 
 "https://id.twitch.tv/oauth2/authorize?response_type=token&client_id=vcs989uc111bryinsv1bwps0qdgkis&redirect_uri=https://bot.idevision.net/auth/token&scope=chat:edit+chat:read+whispers:read+whispers:edit+user_read+channel_check_subscription+channel_commercial+channel_editor+channel_subscriptions&force_verify=true"

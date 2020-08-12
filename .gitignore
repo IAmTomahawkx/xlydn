@@ -3,7 +3,9 @@
 config.ini
 services/data.db
 services/modstriking.bin
-dev_locale/all_files.py
+dev_locale/*
+locale/*
+template.pot
 
 # Created by .ignore support plugin (hsz.mobi)
 ### Python template

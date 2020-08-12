@@ -1,5 +1,7 @@
 import json
 import typing
+import time
+import asyncio
 
 import discord
 import discord.utils
@@ -158,6 +160,190 @@ class User:
             self.badges = json.loads(row[7]) if row[7] else []
         except:
             self.badges = []
+
+class LineBucket:
+    def __init__(self, trigger, shared=False):
+        self.shared = shared
+        self._trigger = trigger
+        if shared:
+            self.value = 0
+        else:
+            self.value = [0, 0]
+
+    def inc(self, where: int, val=1):
+        if self.shared:
+            self.value += val
+            if self.value >= self._trigger:
+                return True
+
+            return False
+
+        else:
+            self.value[where] += 1
+            if self.value[where] > self._trigger:
+                return True
+
+    def triggered(self, where: int):
+        if self.shared:
+            return self.value >= self._trigger
+
+        return self.value[where] >= self._trigger
+
+    def reset(self):
+        self.value = 0
+
+class TimerLoop:
+    """
+    Binds multiple timers together to form one chain
+    """
+    def __init__(self, system, name, delay, minlines, place, channel):
+        self.name = name
+        self.system = system
+        self.timers = []
+        self.fire_index = [0, 0]
+        self.delay = delay
+        self.minlines = minlines
+        self.channel = channel
+        self.place = place
+        self._bucket = LineBucket(self.minlines)
+        self._task = None
+
+    def start_task(self):
+        self._task = asyncio.get_running_loop().create_task(self.send_loop())
+
+    def end_task(self):
+        if self._task is not None and not self._task.done():
+            self._task.cancel()
+
+    def __del__(self):
+        if self._task is not None and not self._task.done():
+            self._task.cancel()
+
+    def add_timer(self, timer: "ChainTimer"):
+        self.timers.append(timer)
+
+    def remove_timer(self, timer: "ChainTimer"):
+        ind = self.timers.index(timer)
+        if self.fire_index[0] >= ind:
+            self.fire_index[0] -= 1
+
+        if self.fire_index[1] >= ind:
+            self.fire_index[1] -= 1
+
+        self.timers.remove(timer)
+
+    async def send_loop(self):
+        last_discord_send = time.time()
+        last_twitch_send = time.time()
+        while True:
+            cur = time.time()
+
+            if self.place in [1, 2] and self.channel is not None \
+                    and cur - last_discord_send > self.delay \
+                    and self._bucket.triggered(1):
+                if len(self.timers) <= self.fire_index[1]:
+                    self.fire_index[1] = 0
+
+                chn = self.system.discord_bot.get_channel(self.channel)
+                try:
+                    await chn.send(self.timers[self.fire_index[1]].content)
+                except:
+                    pass
+
+            if self.place in [0, 2] and cur - last_twitch_send > self.delay and self._bucket.triggered(0):
+                chn = self.system.twitch_streamer._ws._nick
+                chn = self.system.twitch_bot.get_channel(chn)
+                if len(self.timers) <= self.fire_index[0]:
+                    self.fire_index[1] = 0
+
+                try:
+                    await chn.send(self.timers[self.fire_index[0]].content)
+                except:
+                    pass
+
+            await asyncio.sleep(0)
+
+
+    async def on_twitch_message(self, message):
+        if self.place is 1:
+            return
+
+        self._bucket.inc(0)
+
+    async def on_discord_message(self, message):
+        if self.place is 0:
+            return
+
+        self._bucket.inc(1)
+
+class ChainTimer:
+    def __init__(self, row, loop):
+        self.loop = loop
+        self.content = row[5]
+        self.name = row[0]
+
+
+class SoloTimer:
+    def __init__(self, row, system):
+        self.system = system
+        self.name = row[0]
+        self.delay = row[1]
+        self.minlines = row[2]
+        self.place = row[3]
+        self.shared = bool(row[4])
+        self.content = row[5]
+        self.channel = row[6]
+        self._bucket = LineBucket(self.minlines)
+        self._task = None
+
+    async def _send_loop(self):
+        last_discord_send = time.time()
+        last_twitch_send = time.time()
+        while True:
+            cur = time.time()
+            if self.place in [1, 2] and self.channel is not None and cur - last_discord_send > self.delay and self._bucket.triggered(1):
+                chn = self.system.discord_bot.get_channel(self.channel)
+                try:
+                    await chn.send(self.content)
+                except:
+                    pass
+
+            if self.place in [0, 2] and cur - last_twitch_send > self.delay and self._bucket.triggered(0):
+                chn = self.system.twitch_streamer._ws._nick
+                chn = self.system.twitch_bot.get_channel(chn)
+                try:
+                    await chn.send(self.content)
+                except:
+                    pass
+
+            await asyncio.sleep(1)
+
+
+    def start_loop(self):
+        if self._task is not None and not self._task.done():
+            self._task.cancel()
+
+        self._task = asyncio.get_running_loop().create_task(self._send_loop())
+
+    def stop_loop(self):
+        if self._task is not None:
+            self._task.cancel()
+
+    def __del__(self):
+        if self._task is not None and not self._task.done():
+            self._task.cancel()
+
+    async def on_twitch_message(self, message):
+        if self.place is 1:
+            return
+
+        self._bucket.inc(0)
+
+    async def on_discord_message(self, message):
+        if self.place is 0:
+            return
+
+        self._bucket.inc(1)
 
 
 class BucketType(Enum):

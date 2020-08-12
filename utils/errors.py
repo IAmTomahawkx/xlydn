@@ -1,3 +1,7 @@
+from discord.ext.commands import CheckFailure, CommandError
+
+class GuildCheckFailed(CheckFailure):
+    pass
 
 class Error(Exception):
     def __init__(self, msg):

@@ -12,7 +12,7 @@ gettext_translations = {
     locale: gettext.translation(
         "xlydn",
         languages=(locale,),
-        localedir=os.path.join(BASE_DIR, LOCALE_DIR))
+        localedir=os.path.join(BASE_DIR, LOCALE_DIR), fallback=False)
     for locale in locales}
 
 gettext_translations['English'] = gettext.NullTranslations()
@@ -20,6 +20,11 @@ locales |= {'English'}
 
 
 class LocaleTranslator:
+    normals = {
+        "English": "English",
+        "English_Vulgar": "English Vulgar",
+        "de": "Deutsch"
+    }
     def __init__(self, cfg):
         self._config = cfg
 

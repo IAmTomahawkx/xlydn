@@ -3,6 +3,8 @@ from discord.ext import commands
 import traceback
 import logging
 
+from utils import errors
+
 logger = logging.getLogger("xlydn.discord.errors")
 
 def setup(bot):
@@ -26,6 +28,9 @@ class Handler(commands.Cog):
         if isinstance(exception, commands.CommandInvokeError):
             if isinstance(exception, discord.Forbidden):
                 return # rip
+
+        if isinstance(exception, errors.GuildCheckFailed):
+            return await ctx.send(self.bot.system.locale("You may not use commands in this server"))
 
         if isinstance(exception, commands.MissingRequiredArgument):
             return await ctx.send(self.bot.system.locale("Missing arguments! see `{0}`").format(f"{ctx.prefix}help {ctx.command.qualified_name}"))

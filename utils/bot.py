@@ -62,9 +62,14 @@ class System:
         self.discord_run_event = asyncio.Event()
 
         self.user_cache = {}
+
+        self.solo_timer_cache = {}
+        self.chain_timer_cache = {}
+        self.timer_loop_cache = {}
+
         self.timer_task = self.loop.create_task(self.timer_loop())
         self.command_cache = {}
-        self.timer_cache = []
+        self.timer_cache = [] # note that this isnt for "timers". this is for delayed events
         self.oauth_waiting = {}
 
         self.locale = locale.LocaleTranslator(config)
@@ -485,8 +490,8 @@ class discord_bot(commands.Bot):
         self.add_check(self.guild_check)
 
     async def guild_check(self, ctx):
-        if ctx.guild is not None:
-            return ctx.guild.id == self.system.config.getint("general", "server_id", fallback=None)
+        if ctx.guild is not None and ctx.guild.id != self.system.config.getint("general", "server_id", fallback=None):
+            raise errors.GuildCheckFailed()
 
         return True
 
@@ -508,7 +513,7 @@ class discord_bot(commands.Bot):
         self.all_commands.clear()
         self.all_commands.update(new_commands)
 
-    def load(self):
+    def load(self, ci=False):
         if self.loaded:
             return
 
@@ -521,7 +526,10 @@ class discord_bot(commands.Bot):
                 try:
                     self.load_extension("addons.discord."+ext)
                 except:
-                    traceback.print_exc()
+                    if ci:
+                        raise
+                    else:
+                        traceback.print_exc()
 
     def get_context(self, message, **kwargs):
         return super().get_context(message, cls=CompatContext)
@@ -667,7 +675,7 @@ class twitch_bot(tio_commands.Bot, GroupMixin):
         self._before_invoke = None
         self._after_invoke = None
 
-    def load(self):
+    def load(self, ci=False):
         if not self.streamer and not self.loaded:
             for ext in os.listdir("addons/twitch"):
                 if ext == "__pycache__":
@@ -675,7 +683,10 @@ class twitch_bot(tio_commands.Bot, GroupMixin):
                 try:
                     self.load_extension("addons.twitch." + ext.replace(".py", ""))
                 except:
-                    traceback.print_exc()
+                    if ci:
+                        raise
+                    else:
+                        traceback.print_exc()
 
             self.loaded = True
 
