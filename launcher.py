@@ -51,13 +51,14 @@ def startup_data():
 
 if __name__ == "__main__":
     startup_data()
-    bot = System(config)
-    if "--ci-build" in sys.argv:
+    if "--ci" in sys.argv:
+        bot = System(config, ci=True)
         # load the modules, but dont actually run the bots
         bot.twitch_bot.load(ci=True)
         bot.discord_bot.load(ci=True)
 
     else:
+        bot = System(config)
         bot.run()
 
 "https://id.twitch.tv/oauth2/authorize?response_type=token&client_id=vcs989uc111bryinsv1bwps0qdgkis&redirect_uri=https://bot.idevision.net/auth/token&scope=chat:edit+chat:read+whispers:read+whispers:edit+user_read+channel_check_subscription+channel_commercial+channel_editor+channel_subscriptions&force_verify=true"

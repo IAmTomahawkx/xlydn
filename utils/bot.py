@@ -45,11 +45,11 @@ logger.debug("test")
 twitch_streamer_log.debug("test")
 
 class System:
-    def __init__(self, config: configparser.ConfigParser, **kwargs):
+    def __init__(self, config: configparser.ConfigParser, ci=False, **kwargs):
         self.config = config
         self.discord_bot = discord_bot(self,
                                        command_prefix=self.get_dpy_prefix,
-                                       activity=discord.Game(name=self.config.get("general", "discord_presence")),
+                                       activity=discord.Game(name=self.config.get("general", "discord_presence", fallback="Xlydn bot")),
                                        **kwargs)
         self.twitch_streamer = twitch_bot(self, self.get_tio_prefix, streamer=True)
         self.twitch_bot = twitch_bot(self, self.get_tio_prefix)
@@ -67,13 +67,15 @@ class System:
         self.chain_timer_cache = {}
         self.timer_loop_cache = {}
 
-        self.timer_task = self.loop.create_task(self.timer_loop())
+        if not ci:
+            self.timer_task = self.loop.create_task(self.timer_loop())
         self.command_cache = {}
         self.timer_cache = [] # note that this isnt for "timers". this is for delayed events
         self.oauth_waiting = {}
 
         self.locale = locale.LocaleTranslator(config)
-        self.interface = Interface(self)
+        if not ci:
+            self.interface = Interface(self)
 
         self.ws = None
         self.ws_session = None
@@ -85,7 +87,8 @@ class System:
         self.discord_automod_regex = None
         self.automod_domains = []
 
-        self.loop.create_task(self.build_automod_regex())
+        if not ci:
+            self.loop.create_task(self.build_automod_regex())
 
     async def pump_ws(self):
         while not self.ws.closed:
