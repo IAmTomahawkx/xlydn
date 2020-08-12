@@ -7,4 +7,4 @@ install:
   - pip install coverage
 
 script:
-  - launcher.py --ci
+  - python3.7 launcher.py --ci
