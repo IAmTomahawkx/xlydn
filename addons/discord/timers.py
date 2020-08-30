@@ -97,3 +97,4 @@ class Timers(commands.Cog):
     @timer.command()
     @dpy_check_editor()
     async def solos(self, ctx):
+        pass
