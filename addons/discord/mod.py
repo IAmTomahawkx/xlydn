@@ -53,8 +53,12 @@ class StrikesValues:
                 "levels": {},
                 "temp_lengths": {}
             }
-            with open(os.path.join(os.curdir, "services", "modstriking.bin"), "wb") as f:
-                f.write(gzip.compress(json.dumps(self._value).encode()))
+            try:
+                with open(os.path.join(os.curdir, "services", "modstriking.bin"), "wb") as f:
+                    f.write(gzip.compress(json.dumps(self._value).encode()))
+
+            except FileNotFoundError: # travisCI is stupid
+                pass
 
 
     def save(self):
