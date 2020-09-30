@@ -46,7 +46,7 @@ class MultiSignal(Signal):
         self.__emitters = {}
 
     def add_listener(self, event: str, func: Callable): # noqa
-        if self.__strict and not inspect.iscoroutine(func):
+        if self.__strict and not inspect.iscoroutinefunction(func):
             raise ValueError("listeners must be coroutines")
 
         func._event_name = event
@@ -78,13 +78,12 @@ class MultiSignal(Signal):
         return wraps
 
     def emit(self, event: str, *args, **kwargs):
-        event = "on_" + event
-
         if event not in self.__emitters:
             return
 
         for emitter in self.__emitters[event]:
-            if inspect.iscoroutine(emitter):
+            print(args)
+            if inspect.iscoroutinefunction(emitter):
                 asyncio.run_coroutine_threadsafe(emitter(*args, **kwargs), loop=self.loop)
 
             else:

@@ -20,7 +20,6 @@ import twitchio
 import twitchio.cooldowns
 import twitchio.http
 import twitchio.websocket
-import pyk
 from discord.ext import commands
 from discord.ext.commands.core import _CaseInsensitiveDict
 from discord.ext.commands.view import StringView
@@ -32,17 +31,19 @@ from .contexts import CompatContext, TwitchContext
 from .db import Database
 from .commands import CommandWithLocale, GroupWithLocale
 from .cooldowns import CooldownMapping
+from addons.scripting import handlers
 
 logger = logging.getLogger("xlydn")
+logger.setLevel(logging.DEBUG)
 hdl = logging.StreamHandler(sys.stderr)
 hdl.setLevel(logging.DEBUG)
 logger.addHandler(hdl)
+
 logging.getLogger("aiosqlite3").addHandler(logging.NullHandler(100)) # aiosqlite warnings are annoying and useless
+
 discord_log = logging.getLogger("xlydn.discord")
 twitch_bot_log = logging.getLogger("xlydn.twitchBot")
 twitch_streamer_log = logging.getLogger("xlydn.twitchStreamer")
-logger.debug("test")
-twitch_streamer_log.debug("test")
 
 class System:
     def __init__(self, config: configparser.ConfigParser, ci=False, **kwargs):
@@ -60,6 +61,8 @@ class System:
         self.bot_run_event = asyncio.Event()
         self.streamer_run_event = asyncio.Event()
         self.discord_run_event = asyncio.Event()
+        self.scripts = handlers.ScriptManager(self)
+        self.loop.create_task(self.scripts.search_and_load())
 
         self.user_cache = {}
 
@@ -398,6 +401,10 @@ class System:
     def close(self):
         self.alive = False
 
+    def dispatch(self, event_name, *args, **kwargs):
+        self.scripts.dispatch_event(event_name, *args, **kwargs)
+
+
     def connect_discord_bot(self):
         self.discord_run_event.set()
 
@@ -501,6 +508,10 @@ class discord_bot(commands.Bot):
     async def start(self, *args, **kwargs):
         self.load()
         await super().start(*args, **kwargs)
+
+    def dispatch(self, event_name, *args, **kwargs):
+        self.system.dispatch("on_" + event_name, *args, **kwargs)
+        super(discord_bot, self).dispatch(event_name, *args, **kwargs)
 
     async def locale_updated(self):
         new_commands = {}
@@ -713,6 +724,7 @@ class twitch_bot(tio_commands.Bot, GroupMixin):
     def dispatch(self, event, *args, **kwargs):
         self.loop.create_task(self._dispatch(event, *args, **kwargs))
         ev = 'event_' + event
+        self.system.dispatch(ev, *args, **kwargs)
         for evt in self.extra_listeners.get(ev, []):
             self.loop.create_task(evt(*args, **kwargs))
 

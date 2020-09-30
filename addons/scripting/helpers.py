@@ -1,3 +1,4 @@
+import inspect
 
 class Injection:
     __listeners__ = {}
@@ -11,8 +12,13 @@ class Injection:
         return wraps
 
     def _inject(self, communicator):
-        for listener in self.__listeners__:
-            communicator.dispatcher.add_listener(listener)
+        for name, listener in self.__listeners__.items():
+            async def cls_injected(*args, **kwargs):
+                await listener(self, *args, **kwargs)
+
+            cls_injected.__eq__ = listener.__eq__
+
+            communicator.dispatcher.add_listener(listener.__event, cls_injected)
 
     def _eject(self, communicator):
         for listener in self.__listeners__:

@@ -148,7 +148,7 @@ class CustomCommand:
 
 class User:
     def __init__(self, row, system):
-        self._sys = system
+        self._system = system
         self.twitch_id = row[0]
         self.twitch_name = row[1]
         self.discord_id = row[2]
@@ -160,6 +160,18 @@ class User:
             self.badges = json.loads(row[7]) if row[7] else []
         except:
             self.badges = []
+
+    @property
+    def discord_user(self):
+        serv = self._system.discord_bot.get_guild(self._system.config.getinteger("general", "server_id", fallback=0))
+        if serv:
+            return serv.get_member(self.discord_id)
+
+    @property
+    def twitch_user(self):
+        chan = self._system.twitch_streamer.get_channel(self._system.twitch_streamer.nick)
+        if chan:
+            return discord.utils.get(chan.chatters, name=self.twitch_name)
 
 class LineBucket:
     def __init__(self, trigger, shared=False):

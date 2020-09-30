@@ -7,7 +7,7 @@ psutil
 requests
 colorama
 jishaku
-git+https://github.com/IAmTomahawkx/pyk
+viper-lang
 parsedatetime
 python-dateutil
 PyQt5

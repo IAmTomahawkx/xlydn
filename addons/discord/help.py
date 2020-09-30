@@ -46,6 +46,9 @@ class Help(commands.HelpCommand):
             if not user.guild_permissions.ban_members:
                 return False
 
+        if "owner" in types:
+            return False
+
         return True
 
     async def command_callback(self, ctx, *, command=None):

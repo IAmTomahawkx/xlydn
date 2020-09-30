@@ -2,7 +2,7 @@ import asyncio
 import traceback
 
 from discord.ext.commands.view import StringView
-import pyk
+import viper
 
 from . import paginators
 
@@ -24,7 +24,7 @@ async def parse(bot, msg, view: StringView, command: str, discord: bool):
 
 async def parse_discord_specifics(bot, msg, command, args):
     async def send(content):
-        if content == pyk.PYK_NONE:
+        if content == viper.VP_NONE:
             return
 
         if not content:
@@ -43,14 +43,14 @@ async def parse_discord_specifics(bot, msg, command, args):
         try:
             vals[f"arg{i}"] = args[i-1], True
         except IndexError:
-            vals[f"arg{i}"] = pyk.PYK_NONE, True
+            vals[f"arg{i}"] = viper.VP_NONE, True
 
 
-    n = pyk.PYKNamespace()
+    n = viper.VPNamespace()
     n.update(vals)
     try:
-        await pyk.eval(command, namespace=n, safe=True)
-    except pyk.PYK_Error as e:
+        await viper.eval(command, namespace=n, safe=True)
+    except viper.VP_Error as e:
         await msg.channel.send("\n".join(e.format_stack()))
 
     except Exception as e:
