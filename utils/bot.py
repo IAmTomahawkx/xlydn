@@ -26,7 +26,7 @@ from discord.ext.commands.view import StringView
 from twitchio.ext import commands as tio_commands
 
 from interface.main import App as Interface
-from . import token, errors, common, locale
+from . import token, errors, common, locale, websocket
 from .contexts import CompatContext, TwitchContext
 from .db import Database
 from .commands import CommandWithLocale, GroupWithLocale
@@ -51,6 +51,7 @@ class System:
         self.discord_bot = discord_bot(self,
                                        command_prefix=self.get_dpy_prefix,
                                        activity=discord.Game(name=self.config.get("general", "discord_presence", fallback="Xlydn bot")),
+                                       intents=discord.Intents.all(),
                                        **kwargs)
         self.twitch_streamer = twitch_bot(self, self.get_tio_prefix, streamer=True)
         self.twitch_bot = twitch_bot(self, self.get_tio_prefix)
@@ -62,7 +63,8 @@ class System:
         self.streamer_run_event = asyncio.Event()
         self.discord_run_event = asyncio.Event()
         self.scripts = handlers.ScriptManager(self)
-        self.loop.create_task(self.scripts.search_and_load())
+        if not ci:
+            self.loop.create_task(self.scripts.search_and_load())
 
         self.user_cache = {}
 
@@ -80,8 +82,10 @@ class System:
         if not ci:
             self.interface = Interface(self)
 
-        self.ws = None
-        self.ws_session = None
+        self.auth_ws = None
+        self.auth_ws_session = None
+        self.ws = websocket.Websocket(self)
+
         self.discord_appinfo = None
         self.pump_task = None
         self.connecting_count = 0
@@ -93,10 +97,10 @@ class System:
         if not ci:
             self.loop.create_task(self.build_automod_regex())
 
-    async def pump_ws(self):
-        while not self.ws.closed:
+    async def pump_auth_ws(self):
+        while not self.auth_ws.closed:
             try:
-                data = await self.ws.receive_json(timeout=300)
+                data = await self.auth_ws.receive_json(timeout=300)
                 if data['u'] in self.oauth_waiting:
                     self.oauth_waiting[data['u']].set_result(data['d'])
                 else:
@@ -109,8 +113,8 @@ class System:
         resp = await self._link(ctx, user_id, is_discord=True)
         self.connecting_count -= 1
         if self.connecting_count < 1:
-            await self.ws.close()
-            self.ws = None
+            await self.auth_ws.close()
+            self.auth_ws = None
 
         return resp
 
@@ -122,24 +126,24 @@ class System:
             raise
         else:
             if self.connecting_count < 1:
-                await self.ws.close()
-                self.ws = None
+                await self.auth_ws.close()
+                self.auth_ws = None
         finally:
             self.connecting_count -= 1
 
         return resp
 
     async def _link(self, ctx, user_id, is_discord=False):
-        if self.ws is None or self.ws.closed:
-            if self.ws_session is None:
-                self.ws_session = aiohttp.ClientSession()
+        if self.auth_ws is None or self.auth_ws.closed:
+            if self.auth_ws_session is None:
+                self.auth_ws_session = aiohttp.ClientSession()
 
-                self.ws = await self.ws_session.ws_connect("https://bot.idevision.net/bot/link_ws")
+                self.auth_ws = await self.auth_ws_session.ws_connect("https://bot.idevision.net/bot/link_ws")
 
             if self.pump_task is None:
-                self.pump_task = self.loop.create_task(self.pump_ws())
+                self.pump_task = self.loop.create_task(self.pump_auth_ws())
 
-        await self.ws.send_json({"Authorization": self.config.get("tokens", "twitch_streamer_token"), "u": user_id, "c": False}) # token will be used to verify with twitch, it wont be stored.
+        await self.auth_ws.send_json({"Authorization": self.config.get("tokens", "twitch_streamer_token"), "u": user_id, "c": False}) # token will be used to verify with twitch, it wont be stored.
 
         future = self.loop.create_future()
         self.oauth_waiting[user_id] = future
@@ -169,10 +173,10 @@ class System:
                     token.BASE_OAUTH_REDIRECT)
                 await ctx.send(fmt)
 
-            if self.ws is None or self.ws.closed:
-                self.ws = await self.ws_session.ws_connect("https://bot.idevision.net/bot/link_ws")
+            if self.auth_ws is None or self.auth_ws.closed:
+                self.auth_ws = await self.auth_ws_session.ws_connect("https://bot.idevision.net/bot/link_ws")
 
-            await self.ws.send_json(
+            await self.auth_ws.send_json(
                 {"Authorization": self.config.get("tokens", "twitch_streamer_token"), "u": user_id, "c": True}) # tell it to wait 5 minutes this time
 
             future = self.loop.create_future()
@@ -396,14 +400,15 @@ class System:
             self.streamer_run_event.set()
             self.bot_run_event.set()
 
-        self.loop.run_until_complete(self._run())
-
-    def close(self):
-        self.alive = False
+        try:
+            self.loop.run_until_complete(self._run())
+        except KeyboardInterrupt:
+            pass
+        finally:
+            self.loop.run_until_complete(self.close())
 
     def dispatch(self, event_name, *args, **kwargs):
         self.scripts.dispatch_event(event_name, *args, **kwargs)
-
 
     def connect_discord_bot(self):
         self.discord_run_event.set()
@@ -425,7 +430,7 @@ class System:
 
     async def _run(self):
         self.session = aiohttp.ClientSession()
-        interface = self.loop.create_task(self.interface.mainloop())
+        interface = self.__interf = self.loop.create_task(self.interface.mainloop())
         dbot = None
         streamer = None
         bot = None
@@ -471,24 +476,28 @@ class System:
 
                 await asyncio.sleep(0)
 
-        finally:
-            if not interface.done():
-                interface.cancel()
+        except KeyboardInterrupt:
+            pass
 
-            if bot is not None and not bot.done():
-                bot.cancel()
+    async def close(self):
+        self.alive = False
+        interface = self.__interf
+        logger.debug("Shutting down")
 
-            if streamer is not None and not streamer.done():
-                streamer.cancel()
+        if not interface.done():
+            interface.cancel()
 
-            if dbot is not None and not dbot.done():
-                import async_timeout
-                async with async_timeout.timeout(5):
-                    await self.discord_bot.logout()
-                dbot.cancel()
+            import async_timeout
+            async with async_timeout.timeout(5):
+                await self.discord_bot.logout()
 
-            with open("config.ini", "w") as f:
-                self.config.write(f)
+        await self.twitch_bot.stop()
+        await self.twitch_streamer.stop()
+
+        with open("config.ini", "w") as f:
+            self.config.write(f)
+
+        logger.debug("Goodbye!")
 
 class discord_bot(commands.Bot):
     def __init__(self, system, *args, **kwargs):
@@ -510,7 +519,7 @@ class discord_bot(commands.Bot):
         await super().start(*args, **kwargs)
 
     def dispatch(self, event_name, *args, **kwargs):
-        self.system.dispatch("on_" + event_name, *args, **kwargs)
+        self.system.dispatch(event_name, *args, **kwargs, platform="discord")
         super(discord_bot, self).dispatch(event_name, *args, **kwargs)
 
     async def locale_updated(self):
@@ -688,6 +697,8 @@ class twitch_bot(tio_commands.Bot, GroupMixin):
         self.extra_listeners = {}
         self._before_invoke = None
         self._after_invoke = None
+        self._webhook_server = None
+        self._pump = None
 
     def load(self, ci=False):
         if not self.streamer and not self.loaded:
@@ -703,6 +714,13 @@ class twitch_bot(tio_commands.Bot, GroupMixin):
                         traceback.print_exc()
 
             self.loaded = True
+
+    async def stop(self):
+        if self._pump and not self._pump.done():
+            self._pump.cancel()
+
+        if self._ws.is_connected:
+            await self._ws._websocket.close()
 
     async def locale_updated(self):
         new_commands = {}
@@ -724,7 +742,7 @@ class twitch_bot(tio_commands.Bot, GroupMixin):
     def dispatch(self, event, *args, **kwargs):
         self.loop.create_task(self._dispatch(event, *args, **kwargs))
         ev = 'event_' + event
-        self.system.dispatch(ev, *args, **kwargs)
+        self.system.dispatch(event, *args, **kwargs, platform="twitch")
         for evt in self.extra_listeners.get(ev, []):
             self.loop.create_task(evt(*args, **kwargs))
 
@@ -900,11 +918,13 @@ class twitch_bot(tio_commands.Bot, GroupMixin):
         await self._ws._connect()
         self.loop.create_task(self.join_channels([self._ws.nick]))
         try:
-            await self._ws._listen()
+            self._pump = self.loop.create_task(self._ws._listen())
+            while not self._pump.done():
+                await asyncio.sleep(1)
         except KeyboardInterrupt:
             pass
         finally:
-            await self._ws._websocket.close()
+            await self.stop()
 
     async def event_message(self, message: twitchio.Message):
         ctx = await self.get_context(message)

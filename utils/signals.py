@@ -1,6 +1,8 @@
 import asyncio
 import inspect
+import traceback
 from typing import Callable, Dict, List, ClassVar
+
 
 class Signal:
     def __init__(self):
@@ -49,8 +51,6 @@ class MultiSignal(Signal):
         if self.__strict and not inspect.iscoroutinefunction(func):
             raise ValueError("listeners must be coroutines")
 
-        func._event_name = event
-
         if event in self.__emitters:
             self.__emitters[event].append(func)
 
@@ -58,12 +58,11 @@ class MultiSignal(Signal):
             self.__emitters[event] = [func]
 
     def remove_listener(self, func: Callable): # noqa
-        if not hasattr(func, "_event_name"):
-            raise ValueError("function is not a listener")
-
-        event = func._event_name # noqa
-        if event in self.__emitters:
-            self.__emitters[event].remove(func)
+        for x, y in self.__emitters.items():
+            for z in y:
+                if func == z:
+                    self.__emitters[x].remove(func)
+                    return
 
     def listen(self, event: str = None) -> Callable:
         """
@@ -82,9 +81,8 @@ class MultiSignal(Signal):
             return
 
         for emitter in self.__emitters[event]:
-            print(args)
             if inspect.iscoroutinefunction(emitter):
-                asyncio.run_coroutine_threadsafe(emitter(*args, **kwargs), loop=self.loop)
+                asyncio.create_task(emitter(*args, **kwargs))
 
             else:
                 emitter(*args, **kwargs)

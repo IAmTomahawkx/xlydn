@@ -4,6 +4,7 @@ import tkinter.dnd
 import tkinter.messagebox
 import logging
 import asyncio
+import difflib
 
 from utils import token
 
@@ -113,14 +114,17 @@ class App(tkinter.Tk):
 
         bot = self.system.discord_bot
         name = self.server_name.get()
-        for guild in bot.guilds:
-            if guild.name == name.strip():
-                fmt = self.system.locale("Server name: {0}\nServer id: {1}\nServer Owner: {2}").format(guild.name, guild.id, guild.owner)
-                self.serversearch_text.set(self.system.locale("Connected to a server\n{0}").format(fmt))
-                self.system.config.set("general", "server_about", fmt)
-                self.system.config.set("general", "server_id", str(guild.id))
-                self.system.config.set("general", "server_name", guild.name)
-                return
+        names = [x.name for x in bot.guilds]
+        name = difflib.get_close_matches(name.strip(), names, n=1)
+        if name:
+            for guild in bot.guilds:
+                if guild.name == name[0].strip():
+                    fmt = self.system.locale("Server name: {0}\nServer id: {1}\nServer Owner: {2}").format(guild.name, guild.id, guild.owner)
+                    self.serversearch_text.set(self.system.locale("Connected to a server\n{0}").format(fmt))
+                    self.system.config.set("general", "server_about", fmt)
+                    self.system.config.set("general", "server_id", str(guild.id))
+                    self.system.config.set("general", "server_name", guild.name)
+                    return
 
         self.serversearch_text.set(self.system.locale("No server found with the name \"{0}\"").format(name))
 

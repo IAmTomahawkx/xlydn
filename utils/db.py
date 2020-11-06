@@ -120,6 +120,20 @@ class Database:
             else:
                 await self.connection.commit()
 
+    async def executescript(self, stmt: str):
+        async with self.lock:
+            if self.connection is None:
+                await self.setup()
+            if self.connection._conn is None:
+                await self.connection.connect()
+            try:
+                await self.connection.executescript(stmt)
+            except aiosqlite3.OperationalError:
+                await self.connection.rollback()
+                raise
+            else:
+                await self.connection.commit()
+
     def __enter__(self):
         return self.connection.__enter__()
 

@@ -19,27 +19,6 @@ colorama.init()
 
 __VERSION__ = "0.0.1"
 
-config = configparser.ConfigParser(allow_no_value=True, interpolation=None)
-config.read("config.ini")
-
-logger = logging.getLogger("xlydn")
-dpylog = logging.getLogger("discord.py")
-tiolog = logging.getLogger("twitchio")
-if config.getboolean("developer", "dev_mode", fallback=False):
-    logging.basicConfig()
-else:
-    if not os.path.exists("log"):
-        os.mkdir("./log")
-
-    handle = handlers.RotatingFileHandler("log/xlydn.log", maxBytes=30000)
-    dpy_handle = handlers.RotatingFileHandler("log/discord.log", maxBytes=30000)
-    tio_handle = handlers.RotatingFileHandler("log/twitch.log", maxBytes=30000)
-
-
-executor = ThreadPoolExecutor(max_workers=config.getint("developer", "max_pool_workers", fallback=3))
-
-asyncio.get_event_loop().set_default_executor(executor)
-
 def startup_data():
     print(colorama.Fore.GREEN + "Starting")
     print(colorama.Fore.MAGENTA + f"Bot version: {__VERSION__}")
@@ -50,12 +29,34 @@ def startup_data():
 
 
 if __name__ == "__main__":
+    config = configparser.ConfigParser(allow_no_value=True, interpolation=None)
+    config.read("config.ini")
+
+    logger = logging.getLogger("xlydn")
+    dpylog = logging.getLogger("discord.py")
+    tiolog = logging.getLogger("twitchio")
+    if config.getboolean("developer", "dev_mode", fallback=False):
+        logging.basicConfig()
+    else:
+        if not os.path.exists("log"):
+            os.mkdir("./log")
+
+        handle = handlers.RotatingFileHandler("log/xlydn.log", maxBytes=30000)
+        dpy_handle = handlers.RotatingFileHandler("log/discord.log", maxBytes=30000)
+        tio_handle = handlers.RotatingFileHandler("log/twitch.log", maxBytes=30000)
+
+    executor = ThreadPoolExecutor(max_workers=config.getint("developer", "max_pool_workers", fallback=3))
+
+    asyncio.get_event_loop().set_default_executor(executor)
+
     startup_data()
     if "--ci" in sys.argv:
         bot = System(config, ci=True)
         # load the modules, but dont actually run the bots
         bot.twitch_bot.load(ci=True)
         bot.discord_bot.load(ci=True)
+        bot.loop.run_until_complete(bot.scripts.search_and_load())
+        bot.loop.run_until_complete(bot.scripts.unload_all())
 
     else:
         bot = System(config)
