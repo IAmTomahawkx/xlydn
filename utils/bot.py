@@ -387,11 +387,11 @@ class System:
                 removal.clear()
 
     def get_tio_prefix(self, *args):
-        return self.config.get("general", "command_prefix")
+        return self.config.get("general", "command_prefix", fallback="!")
 
     def get_dpy_prefix(self, bot, msg):
         mention = commands.when_mentioned(bot, msg)
-        mention.append(self.config.get("general", "command_prefix"))
+        mention.append(self.config.get("general", "command_prefix", fallback="!"))
         return mention
 
     def run(self):
