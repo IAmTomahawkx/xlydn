@@ -35,7 +35,7 @@ class PluginManager(dpy_commands.Cog):
         """
         Reloads the given plugin
         """
-        if plugin_id not in self.plugins.scripts:
+        if plugin_id not in self.plugins.plugins:
             return await ctx.send(self.system.locale("No plugin with that identifier found"))
 
         await ctx.send(self.system.locale("Reloading {0}").format(plugin_id))
@@ -85,3 +85,31 @@ class PluginManager(dpy_commands.Cog):
         """
         data = await self.plugins.update_plugin(plugin_id)
         await ctx.send(data)
+
+    @scripts.command()
+    async def upload(self, ctx, plugin_id: str):
+        """
+        Uploads one of your plugins to the api.
+        The following are required for you to be able to do this:
+        - You must be an approved plugin developer
+        - A plugin with this id must not exist and be owned by someone else
+        - The plugin must be loaded on your bot when you run this command
+
+        All plugins must wait for approval before being released, you may only have one version waiting for approval per plugin id at a time.
+        If the plugin already exists and you own it, the uploaded plugin will be considered a newer version, and once approved, bots will auto-update to this new version
+        If you have any questions feel free to dm me: IAmTomahawkx#1000
+        """
+        if plugin_id not in self.plugins.plugins:
+            return await ctx.send(self.system.locale("No plugin with that identifier found"))
+
+        await ctx.send(self.system.locale("Uploading {0}").format(plugin_id))
+
+        try:
+            v = await self.plugins.upload_plugin(self.plugins.plugins[plugin_id])
+            if v:
+                await ctx.send(v)
+            else:
+                await ctx.send(self.system.locale("Upload successful, now wait for approval!"))
+        except Exception as e:
+            pages = paginators.TextPages(ctx, "".join(traceback.format_exception(type(e), e, e.__traceback__)))
+            await pages.paginate()

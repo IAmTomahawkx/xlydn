@@ -17,7 +17,7 @@ from utils.bot import System
 prettify_exceptions.hook()
 colorama.init()
 
-__VERSION__ = "0.0.1"
+__VERSION__ = "0.0.2"
 
 def startup_data():
     print(colorama.Fore.GREEN + "Starting")
