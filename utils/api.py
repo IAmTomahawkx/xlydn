@@ -7,7 +7,7 @@ from typing import Optional
 import aiohttp
 import colorama
 
-BASE_URL = "http://127.0.0.1:8334/"
+BASE_URL = "https://bot.idevision.net/"
 BASE_OAUTH_REDIRECT = "https://discord.com/api/oauth2/authorize?client_id=717915021534953472&redirect_uri=https%3A%2F%2bot.idevision.net%2Foauth%2Fdiscord&response_type=code&scope=identify%20connections"
 #BASE_OAUTH_REDIRECT = "https://discord.com/api/oauth2/authorize?client_id=717915021534953472&redirect_uri=http%3A%2F%2F127.0.0.1%3A8334%2Foauth%2Fdiscord&response_type=code&scope=identify%20connections"
 
