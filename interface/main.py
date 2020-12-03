@@ -6,9 +6,7 @@ import logging
 import asyncio
 import difflib
 
-from utils import token
-
-logger = logging.getLogger("amalna.ui")
+logger = logging.getLogger("xlydn.ui")
 
 
 class App(tkinter.Tk):
@@ -184,18 +182,14 @@ class App(tkinter.Tk):
         self.system.disconnect_twitch_bot()
 
     async def grab_refresh_streamer(self):
-        t = self.system.config.get("tokens", "twitch_streamer_token")
-
-        refresh = await token.get_refresh_token(self.system, t)
-        if refresh is not None:
-            self.system.config.set("tokens", "twitch_streamer_refresh", refresh)
+        token = await self.system.api.get_refresh_token(self.token_streamer.get())
+        if token:
+            self.system.config.set("tokens", "twitch_streamer_refresh", token)
 
     async def grab_refresh_bot(self):
-        t = self.system.config.get("tokens", "twitch_bot_token")
-
-        refresh = await token.get_refresh_token(self.system, t)
-        if refresh is not None:
-            self.system.config.set("tokens", "twitch_bot_refresh", refresh)
+        token = await self.system.api.get_refresh_token(self.token_bot.get())
+        if token:
+            self.system.config.set("tokens", "twitch_bot_refresh", token)
 
     async def mainloop(self):
         while self.system.alive:

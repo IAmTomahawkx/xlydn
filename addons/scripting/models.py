@@ -5,7 +5,7 @@ class PartialChannel:
     __slots__ = "name", "id", "location", "_sender"
     def __init__(self, messagable):
         self._sender = messagable.send
-        self.name = messagable.name
+        self.name = getattr(messagable, "name", None)
         self.id = getattr(messagable, "id", None)
 
         self.location = "discord" if isinstance(messagable, discord.abc.Messageable) else "twitch"
@@ -25,7 +25,7 @@ class PartialUser:
         self.display_name: str = user.display_name
         self.bot = getattr(user, "bot", False)
 
-        if isinstance(user, discord.abc.User):
+        if isinstance(user, discord.abc.User) and not isinstance(user, discord.ClientUser):
             self._sender = user.send
 
         else:

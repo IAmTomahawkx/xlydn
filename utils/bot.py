@@ -26,7 +26,7 @@ from discord.ext.commands.view import StringView
 from twitchio.ext import commands as tio_commands
 
 from interface.main import App as Interface
-from . import token, errors, common, locale, websocket
+from . import api, errors, common, locale, websocket
 from .contexts import CompatContext, TwitchContext
 from .db import Database
 from .commands import CommandWithLocale, GroupWithLocale
@@ -48,11 +48,11 @@ twitch_streamer_log = logging.getLogger("xlydn.twitchStreamer")
 class System:
     def __init__(self, config: configparser.ConfigParser, ci=False, **kwargs):
         self.config = config
+        self.api = api.XlydnApi(self)
         self.discord_bot = discord_bot(self,
                                        command_prefix=self.get_dpy_prefix,
                                        activity=discord.Game(name=self.config.get("general", "discord_presence", fallback="Xlydn bot")),
-                                       intents=discord.Intents.all(),
-                                       **kwargs)
+                                       intents=discord.Intents.all())
         self.twitch_streamer = twitch_bot(self, self.get_tio_prefix, streamer=True)
         self.twitch_bot = twitch_bot(self, self.get_tio_prefix)
 
@@ -96,6 +96,13 @@ class System:
 
         if not ci:
             self.loop.create_task(self.build_automod_regex())
+
+        if os.path.exists(os.path.join("services", ".dfuuid.lock")):
+            with open(os.path.join("services", ".dfuuid.lock")) as f:
+                self.id = f.read()
+
+        else:
+            self.id = None
 
     async def pump_auth_ws(self):
         while not self.auth_ws.closed:
@@ -165,12 +172,12 @@ class System:
             if is_discord:
                 fmt = self.locale("Please go to {0} to establish a connection between discord and twitch for your user"
                                   " in this bot. You must have already linked your discord and twitch!").format(
-                    f"[discord.com]({token.BASE_OAUTH_REDIRECT})")
+                    f"[discord.com]({api.BASE_OAUTH_REDIRECT})")
                 await ctx.send(embed=discord.Embed(description=fmt))
             else:
                 fmt = self.locale("Please go to {0} to establish a connection between discord and twitch for your user"
                                   " in this bot. You must have already linked your discord and twitch!").format(
-                    token.BASE_OAUTH_REDIRECT)
+                    api.BASE_OAUTH_REDIRECT)
                 await ctx.send(fmt)
 
             if self.auth_ws is None or self.auth_ws.closed:
@@ -434,9 +441,29 @@ class System:
         dbot = None
         streamer = None
         bot = None
+        allow_starts = True
         fails = CooldownMapping.from_cooldown(5, 300)
+        if not self.config.get("tokens", "twitch_bot_token", fallback=None) \
+            or not self.config.get("tokens", "twitch_streamer_token", fallback=None) \
+            or not self.config.get("tokens", "discord_bot", fallback=None):
+            logger.error("Refusing to start clients: must have tokens to start!")
+            allow_starts = False
+
+        else:
+            await self.api.do_hello()
+
         try:
             while not interface.done() and self.alive:
+                if not allow_starts and self.config.get("tokens", "twitch_bot_token", fallback=None) \
+                        and self.config.get("tokens", "twitch_streamer_token", fallback=None) \
+                        and self.config.get("tokens", "discord_bot", fallback=None):
+                    allow_starts = True
+                    await self.api.do_hello()
+
+                elif not allow_starts:
+                    await asyncio.sleep(1)
+                    continue
+
                 if self.bot_run_event.is_set() and (bot is None or bot.done()):
                     if fails.update_rate_limit("bot.twitch"):
                         self.bot_run_event.clear()
@@ -464,15 +491,22 @@ class System:
                 if self.discord_run_event.is_set() and (dbot is None or dbot.done()):
                     if fails.update_rate_limit("bot.discord"):
                         self.discord_run_event.clear()
-                        self.interface.connections_swap_bot_connect_state(False)
-                        logger.warning("Failed to start Discord Bot")
+                        self.interface.connections_swap_discord_connect_state(False)
+                        logger.error("Failed to start Discord Bot", exc_info=dbot.exception() if dbot else None)
                         continue
 
+                    # for whatever reason, attempting to reuse the bot object causes a variety of asyncio issues
+                    self.discord_bot = discord_bot(self,
+                                       command_prefix=self.get_dpy_prefix,
+                                       activity=discord.Game(name=self.config.get("general", "discord_presence", fallback="Xlydn bot")),
+                                       intents=discord.Intents.all())
+                    import gc
+                    gc.collect()
                     dbot = self.loop.create_task(self.discord_bot.try_start(self.config.get("tokens", "discord_bot")))
 
                 if not self.discord_run_event.is_set() and dbot is not None and not dbot.done():
-                    await self.discord_bot.logout()
-                    dbot.cancel()
+                    await self.discord_bot.close()
+                    logger.debug("Closed discord client")
 
                 await asyncio.sleep(0)
 
@@ -558,11 +592,12 @@ class discord_bot(commands.Bot):
         return super().get_context(message, cls=CompatContext)
 
     async def try_start(self, token):
-        self.load()
         try:
-            await self.start(token)
+            return await self.start(token)
         except Exception as e:
+            raise
             if isinstance(e, CancelledError):
+                discord_log.error("Cancelled", exc_info=e)
                 await self.logout()
 
             elif isinstance(e, errors.UserFriendlyError):
@@ -571,6 +606,8 @@ class discord_bot(commands.Bot):
                 logger.exception("uncaught error in discord.bot.start: ", exc_info=e)
                 raise errors.UserFriendlyError("Whoops! something happened while running the discord bot!") from e
 
+        finally:
+            await self.close()
 
 class TioHTTP(twitchio.http.HTTPSession):
     def __init__(self, loop, streamer: bool, client):
@@ -656,12 +693,12 @@ class TioHTTP(twitchio.http.HTTPSession):
             return data
         except twitchio.Unauthorized:
             if self.streamer:
-                self.token = await token.try_streamer_refresh(self.client.system, self._session)
+                self.token = await self.client.system.api.try_streamer_refresh()
             else:
-                self.token = await token.try_bot_refresh(self.client.system, self._session)
+                self.token = await self.client.system.api.try_bot_refresh()
 
             if self.token is None:
-                self.loop.create_task(token.prompt_user_for_token(self.client.system, self._session, "Streamer" if self.streamer else "Bot"))
+                self.loop.create_task(self.client.system.api.prompt_user_for_token("Streamer" if self.streamer else "Bot"))
             else:
                 return await self.request(method, url, params=params, limit=limit, **kwargs)
 
@@ -763,13 +800,13 @@ class twitch_bot(tio_commands.Bot, GroupMixin):
             data = await resp.json()
             if resp.status == 401:
                 if self.streamer:
-                    token_ = await token.try_streamer_refresh(self.system, self.system.session)
+                    token_ = await self.system.api.try_streamer_refresh()
                     if token_ is None:
-                        await token.prompt_user_for_token(self.system, self.system.session)
+                        await self.system.api.prompt_user_for_token()
                 else:
-                    token_ = await token.try_bot_refresh(self.system, self.system.session)
+                    token_ = await self.system.api.try_bot_refresh()
                     if token_ is None:
-                        await token.prompt_user_for_token(self.system, self.system.session, "Bot")
+                        await self.system.api.prompt_user_for_token("Bot")
 
                 raise KeyboardInterrupt
 
@@ -916,10 +953,12 @@ class twitch_bot(tio_commands.Bot, GroupMixin):
             return
 
         await self._ws._connect()
-        self.loop.create_task(self.join_channels([self._ws.nick]))
         try:
             self._pump = self.loop.create_task(self._ws._listen())
             while not self._pump.done():
+                if self.system.twitch_streamer._ws._websocket is not None and not self.system.twitch_streamer._ws._websocket.closed \
+                        and self.system.twitch_streamer._ws.nick not in self._ws._channel_cache:
+                    await self.join_channels([self.system.twitch_streamer._ws.nick])
                 await asyncio.sleep(1)
         except KeyboardInterrupt:
             pass

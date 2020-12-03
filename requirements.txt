@@ -2,7 +2,7 @@ discord.py[voice]
 twitchio
 aioconsole
 aiosqlite3
-aiohttp
+aiohttp[speedups]
 psutil
 requests
 colorama

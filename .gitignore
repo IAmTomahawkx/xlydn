@@ -6,7 +6,7 @@ services/modstriking.bin
 dev_locale/*
 locale/*
 template.pot
-scripts/
+plugins/
 
 # Created by .ignore support plugin (hsz.mobi)
 ### Python template

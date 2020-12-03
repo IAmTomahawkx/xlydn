@@ -33,7 +33,7 @@ class Websocket:
         backoff = 2
         while True:
             try:
-                self.ws = await self.session.ws_connect("https://bot.idevision.net/api/v1/websocket")
+                self.ws = await self.session.ws_connect("https://bot.idevision.net/gateway/v1")
                 logger.debug("Connected to the gateway")
                 await self.send_op_1()
                 self._pump = self.system.loop.create_task(self.pump_socket())
@@ -63,8 +63,8 @@ class Websocket:
     async def ping_task(self):
         while not self.ws.closed:
             self._latency = time.monotonic()
-            await self.send({"op": 2})
-            await asyncio.sleep(10)
+            await self.send({"op": 3})
+            await asyncio.sleep(20)
 
     async def send_op_1(self): # IDENTIFY
         from __main__ import __VERSION__ # noqa
@@ -77,37 +77,22 @@ class Websocket:
 
         data = {
             "version": __VERSION__,
-            "streamer": self.system.config.get("tokens", "twitch_streamer_token"),
-            "bot": self.system.config.get("tokens", "discord_bot"),
-            "client_id": self.system.discord_appinfo.id
+            "token": self.system.config.get("tokens", "twitch_streamer_token"), # this is used to verify with twitch that the bot is legit
+            "twitch_bot_id": self.system.twitch_bot.user_id,
+            "discord_id": self.system.discord_bot.user.id,
+            "bot_id": self.system.id
         }
         await self.send(data)
         self._ping = self.system.loop.create_task(self.ping_task())
 
-    async def handle_op_3(self, msg): # PONG
+    async def handle_op_1(self, msg):
+        await self.send_op_2()
+
+    async def send_op_2(self):
+        data = {}
+        plugin_list = self.system.scripts
+
+    async def handle_op_4(self, msg): # PONG
         self.latency = time.monotonic() - self._latency
 
-    async def handle_op_4(self, msg): # panel update
-        data = msg['d']
-        script = msg.get("s")
 
-        if script:
-            await self.system.scripts.handle_gateway_update(data)
-
-        else:
-            # ...
-            pass
-
-    async def handle_op_6(self, msg): # panel update requested
-        script = msg.get("s")
-
-        if script:
-            await self.system.scripts.handle_update_requested(msg['d'])
-
-    async def send_panel_update(self, payload, script=None):
-        data = {
-            "op": 5,
-            "s": script,
-            "d": payload
-        }
-        await self.send(data)
