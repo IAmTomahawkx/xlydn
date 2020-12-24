@@ -57,10 +57,10 @@ class XlydnApi:
         print(colorama.Fore.RED + f"{who} token is invalid. disconnected." + colorama.Fore.RESET)
         if who == "Streamer":
             system.disconnect_twitch_streamer()
-            system.interface.connections_swap_streamer_connect_state(False)
+            system.interface.token_disconnect_streamer()
         else:
             system.disconnect_twitch_bot()
-            system.interface.connections_swap_bot_connect_state(False)
+            system.interface.token_disconnect_bot()
 
     async def get_refresh_token(self, token: str) -> Optional[str]:
         async with self.session.post(BASE_URL + "api/v2/token/capture_refresh", json={"token": token}) as resp:

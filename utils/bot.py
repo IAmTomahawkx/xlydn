@@ -9,9 +9,10 @@ import os
 import random
 import sys
 import traceback
-from concurrent.futures import CancelledError
 import gzip
 import re
+from concurrent.futures import CancelledError
+from typing import Optional
 
 import aiohttp
 import discord
@@ -25,7 +26,7 @@ from discord.ext.commands.core import _CaseInsensitiveDict
 from discord.ext.commands.view import StringView
 from twitchio.ext import commands as tio_commands
 
-from interface.main import App as Interface
+from interface.main2 import Window as Interface
 from . import api, errors, common, locale, websocket
 from .contexts import CompatContext, TwitchContext
 from .db import Database
@@ -53,8 +54,8 @@ class System:
                                        command_prefix=self.get_dpy_prefix,
                                        activity=discord.Game(name=self.config.get("general", "discord_presence", fallback="Xlydn bot")),
                                        intents=discord.Intents.all())
-        self.twitch_streamer = twitch_bot(self, self.get_tio_prefix, streamer=True)
-        self.twitch_bot = twitch_bot(self, self.get_tio_prefix)
+        self.twitch_streamer = twitch_bot(self, self.get_tio_prefix, streamer=True) # noqa
+        self.twitch_bot = twitch_bot(self, self.get_tio_prefix) # noqa
 
         self.db = Database()
         self.loop = asyncio.get_event_loop()
@@ -190,7 +191,7 @@ class System:
             self.oauth_waiting[user_id] = future
             try:
                 await asyncio.wait_for(future, timeout=300)
-                resp = future.result()
+                resp: dict = future.result()
                 del self.oauth_waiting[user_id]
             except:
                 return False
@@ -321,7 +322,7 @@ class System:
         self.user_cache[resp.id] = resp
         return resp
 
-    async def get_user_twitch_name(self, name, id=None, create=True) -> common.User:
+    async def get_user_twitch_name(self, name, id=None, create=True) -> Optional[common.User]:
         name = name.lower()
         exists = discord.utils.get(self.user_cache.values(), twitch_name=name)
         if exists:
@@ -407,12 +408,15 @@ class System:
             self.streamer_run_event.set()
             self.bot_run_event.set()
 
+        self.end_event = self.loop.create_future()
+
         try:
-            self.loop.run_until_complete(self._run())
-        except KeyboardInterrupt:
-            pass
-        finally:
-            self.loop.run_until_complete(self.close())
+            self.loop.create_task(self._run())
+            self.loop.run_until_complete(self.end_event)
+        except Exception as e:
+            logger.exception("Encountered fatal error, panicking!", exc_info=e)
+            self.interface.crash()
+            self.loop.run_forever()
 
     def dispatch(self, event_name, *args, **kwargs):
         self.scripts.dispatch_event(event_name, *args, **kwargs)
@@ -436,102 +440,104 @@ class System:
         self.streamer_run_event.clear()
 
     async def _run(self):
-        self.session = aiohttp.ClientSession()
-        interface = self.__interf = self.loop.create_task(self.interface.mainloop())
-        dbot = None
-        streamer = None
-        bot = None
-        allow_starts = True
-        fails = CooldownMapping.from_cooldown(5, 300)
-        if not self.config.get("tokens", "twitch_bot_token", fallback=None) \
-            or not self.config.get("tokens", "twitch_streamer_token", fallback=None) \
-            or not self.config.get("tokens", "discord_bot", fallback=None):
-            logger.error("Refusing to start clients: must have tokens to start!")
-            allow_starts = False
-
-        else:
-            await self.api.do_hello()
-
         try:
-            while not interface.done() and self.alive:
-                if not allow_starts and self.config.get("tokens", "twitch_bot_token", fallback=None) \
-                        and self.config.get("tokens", "twitch_streamer_token", fallback=None) \
-                        and self.config.get("tokens", "discord_bot", fallback=None):
-                    allow_starts = True
-                    await self.api.do_hello()
+            self.session = aiohttp.ClientSession()
+            dbot = None
+            streamer = None
+            bot = None
+            allow_starts = True
+            fails = CooldownMapping.from_cooldown(5, 300)
+            if not self.config.get("tokens", "twitch_bot_token", fallback=None) \
+                or not self.config.get("tokens", "twitch_streamer_token", fallback=None) \
+                or not self.config.get("tokens", "discord_bot", fallback=None):
+                logger.error("Refusing to start clients: must have tokens to start!")
+                allow_starts = False
 
-                elif not allow_starts:
-                    await asyncio.sleep(1)
-                    continue
+            else:
+                await self.api.do_hello()
 
-                if self.bot_run_event.is_set() and (bot is None or bot.done()):
-                    if fails.update_rate_limit("bot.twitch"):
-                        self.bot_run_event.clear()
-                        self.interface.connections_swap_bot_connect_state(False)
-                        logger.warning("Failed to start Twitch Bot Client")
+            try:
+                while self.alive:
+                    if not allow_starts and self.config.get("tokens", "twitch_bot_token", fallback=None) \
+                            and self.config.get("tokens", "twitch_streamer_token", fallback=None) \
+                            and self.config.get("tokens", "discord_bot", fallback=None):
+                        allow_starts = True
+                        await self.api.do_hello()
+
+                    elif not allow_starts:
+                        await asyncio.sleep(1)
                         continue
 
-                    bot = self.loop.create_task(self.twitch_bot.try_start(self.config.get("tokens", "twitch_bot_token")))
+                    if self.bot_run_event.is_set() and (bot is None or bot.done()):
+                        if fails.update_rate_limit("bot.twitch"):
+                            self.bot_run_event.clear()
+                            self.interface.token_disconnect_bot()
+                            logger.warning("Failed to start Twitch Bot Client")
+                            continue
 
-                if not self.bot_run_event.is_set() and bot is not None and not bot.done():
-                    bot.cancel()
+                        bot = self.loop.create_task(self.twitch_bot.try_start(self.config.get("tokens", "twitch_bot_token")))
 
-                if self.streamer_run_event.is_set() and (streamer is None or streamer.done()):
-                    if fails.update_rate_limit("streamer.twitch"):
-                        self.streamer_run_event.clear()
-                        self.interface.connections_swap_bot_connect_state(False)
-                        logger.warning("Failed to start Twitch Streamer Client")
-                        continue
+                    if not self.bot_run_event.is_set() and bot is not None and not bot.done():
+                        bot.cancel()
 
-                    streamer = self.loop.create_task(self.twitch_streamer.try_start(self.config.get("tokens", "twitch_streamer_token")))
+                    if self.streamer_run_event.is_set() and (streamer is None or streamer.done()):
+                        if fails.update_rate_limit("streamer.twitch"):
+                            self.streamer_run_event.clear()
+                            self.interface.token_disconnect_streamer()
+                            logger.warning("Failed to start Twitch Streamer Client")
+                            continue
 
-                if not self.streamer_run_event.is_set() and streamer is not None and not streamer.done():
-                    streamer.cancel()
+                        streamer = self.loop.create_task(self.twitch_streamer.try_start(self.config.get("tokens", "twitch_streamer_token")))
 
-                if self.discord_run_event.is_set() and (dbot is None or dbot.done()):
-                    if fails.update_rate_limit("bot.discord"):
-                        self.discord_run_event.clear()
-                        self.interface.connections_swap_discord_connect_state(False)
-                        logger.error("Failed to start Discord Bot", exc_info=dbot.exception() if dbot else None)
-                        continue
+                    if not self.streamer_run_event.is_set() and streamer is not None and not streamer.done():
+                        streamer.cancel()
 
-                    # for whatever reason, attempting to reuse the bot object causes a variety of asyncio issues
-                    self.discord_bot = discord_bot(self,
-                                       command_prefix=self.get_dpy_prefix,
-                                       activity=discord.Game(name=self.config.get("general", "discord_presence", fallback="Xlydn bot")),
-                                       intents=discord.Intents.all())
-                    import gc
-                    gc.collect()
-                    dbot = self.loop.create_task(self.discord_bot.try_start(self.config.get("tokens", "discord_bot")))
+                    if self.discord_run_event.is_set() and (dbot is None or dbot.done()):
+                        if fails.update_rate_limit("bot.discord"):
+                            self.discord_run_event.clear()
+                            self.interface.token_disconnect_discord()
+                            logger.error("Failed to start Discord Bot", exc_info=dbot.exception() if dbot else None)
+                            continue
 
-                if not self.discord_run_event.is_set() and dbot is not None and not dbot.done():
-                    await self.discord_bot.close()
-                    logger.debug("Closed discord client")
+                        # for whatever reason, attempting to reuse the bot object causes a variety of asyncio issues
+                        self.discord_bot = discord_bot(self,
+                                           command_prefix=self.get_dpy_prefix,
+                                           activity=discord.Game(name=self.config.get("general", "discord_presence", fallback="Xlydn bot")),
+                                           intents=discord.Intents.all())
+                        import gc
+                        gc.collect()
+                        dbot = self.loop.create_task(self.discord_bot.try_start(self.config.get("tokens", "discord_bot")))
 
-                await asyncio.sleep(0)
+                    if not self.discord_run_event.is_set() and dbot is not None and not dbot.done():
+                        await self.discord_bot.close()
+                        logger.debug("Closed discord client")
 
-        except KeyboardInterrupt:
-            pass
+                    await asyncio.sleep(0)
+
+            except KeyboardInterrupt:
+                pass
+        except Exception as e:
+            self.end_event.set_exception(e)
 
     async def close(self):
         self.alive = False
-        interface = self.__interf
         logger.debug("Shutting down")
 
-        if not interface.done():
-            interface.cancel()
-
-            import async_timeout
-            async with async_timeout.timeout(5):
-                await self.discord_bot.logout()
+        import async_timeout
+        async with async_timeout.timeout(5):
+            await self.discord_bot.logout()
 
         await self.twitch_bot.stop()
         await self.twitch_streamer.stop()
 
-        with open("config.ini", "w") as f:
+        with open("config.ini", "w", encoding="utf8") as f:
             self.config.write(f)
 
         logger.debug("Goodbye!")
+        try:
+            self.end_event.set_result(None)
+        except:
+            pass
 
 class discord_bot(commands.Bot):
     def __init__(self, system, *args, **kwargs):
@@ -595,7 +601,6 @@ class discord_bot(commands.Bot):
         try:
             return await self.start(token)
         except Exception as e:
-            raise
             if isinstance(e, CancelledError):
                 discord_log.error("Cancelled", exc_info=e)
                 await self.logout()
