@@ -1,4 +1,5 @@
 import asyncio
+import pathlib
 import threading
 import logging
 import os
@@ -6,6 +7,7 @@ import os
 from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtCore import Qt
 from fbs_runtime.application_context.PyQt5 import ApplicationContext
+from fbs_runtime.platform import name as os_name
 
 logger = logging.getLogger("xlydn.interface")
 
@@ -43,10 +45,48 @@ class EmitterString:
         self.__string += other
         self._run_emitters()
 
+class NewBot(QtWidgets.QWidget):
+    def __init__(self, main):
+        super(NewBot, self).__init__(main)
+        self.add_items()
+
+    def add_items(self):
+        self.lay = QtWidgets.QVBoxLayout()
+        f = QtGui.QFont()
+        f.setBold(True)
+        f.setPixelSize(30)
+
+        title = QtWidgets.QLabel("Welcome to xlydn", self)
+        title.setFont(f)
+        self.lay.addWidget(title)
+        panels = [
+            "Hey there, thanks for using my bot!\nThis little welcome window doesn't do much, but it will guide you through the process of setting up xlydn.\n"
+            "The first thing to note is that this bot is very much in development. This UI doesn't do much, it will only help you manage your credentials.\n"
+            "In the future, the web dashboard will let you manage your plugins, commands, and so forth. For now however, we're stuck with discord and twitch commands.",
+            "To get started, head on over to https://discord.com/developers and create an application. Name it, open it, and select the Bot tab on the left.\n"
+            "Click create a bot, confirm, and then copy the OAuth token.\nClick the Connections tab of this window, and paste that token into the Discord Bot tab.",
+            "Next, head on over to https://bot.idevision.net, and press Get a Token. Log in with your twitch account, and then copy the given token into the "
+            "Twitch Streamer section of the Connections tab.",
+            "If you wish to use a different account as your bot account, repeat this process, but log in with your bot account instead of your streaming account,"
+            " and copy this token into the Twitch Bot section of the Connections tab.\nIf you wish to use your streaming account as the bot account too, "
+            "just copy the token from the Twitch Streamer section, and paste it into the Twitch Bot section.",
+            "Now you should invite your new discord bot into your discord server!\n"
+            "Go back to your application at https://discord.com/developers, and click the OAuth tab. Scroll to the bottom, and select the bot scope.\n"
+            "Pick the permissions you wish to grant your bot, and copy the link the website gives you. Go to this link, and invite it to your server!",
+            "Now, click connect on all 3 sections in the connections tab, and your bot should connect to the xlydn server, discord, and twitch.",
+            "The default prefix is '!', test out your bot by using the !help command on discord! If you have any troubles, feel free to ask in my discord server. "
+            "https://discord.gg/cEAxG8A"
+        ]
+        for p in panels:
+            l = QtWidgets.QLabel(p, self)
+            l.setOpenExternalLinks(True)
+            self.lay.addWidget(l)
+
+
 class Window:
-    def __init__(self, system):
+    def __init__(self):
         self.crashing = False
-        self.system = system
+        self.system = None
         self.app = App()
         self.main = QtWidgets.QMainWindow()
         self.window = Widget(self.main)
@@ -54,10 +94,17 @@ class Window:
         self.main.setWindowTitle("Xlydn")
         self.main.setCentralWidget(self.window)
         self.thread = None
-        self.connections_tab()
 
     def home_tab(self):
         self.home = QtWidgets.QWidget(self.window)
+
+    def new(self):
+        self.new_bot = NewBot(self.main)
+        self.window.addTab(self.new_bot, "Welcome")
+        self.connections_tab()
+
+    def normal(self):
+        self.connections_tab()
 
     def connections_tab(self):
         self.connections = QtWidgets.QWidget(self.window)
@@ -179,6 +226,16 @@ class Window:
         self.thread = threading.Thread(target=self.system.run)
         self.thread.start()
         self._run()
+
+    @staticmethod
+    def get_data_location():
+        name = os_name()
+        if name == "Windows":
+            return pathlib.Path(os.getenv("APPDATA"), "Xlydn")
+        elif name == "Linux":
+            return "~/Xlydn/"
+        elif name == "Mac":
+            return "~/Library/Application Support/Xlydn"
 
     def crash(self):
         if self.crashing:

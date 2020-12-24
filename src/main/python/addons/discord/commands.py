@@ -27,8 +27,10 @@ class CustomCommands(commands.Cog):
     async def on_message(self, message: discord.Message):
         if not message.guild:
             return
-        if message.guild.id != self.system.config.getint("general", "server_id", fallback=None):
-            return
+        try:
+            if message.guild.id != self.system.config.getint("general", "server_id", fallback=None):
+                return
+        except:pass
 
         prefixes = await self.bot.get_prefix(message)
         view = StringView(message.content)

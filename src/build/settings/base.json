@@ -1,0 +1,13 @@
+{
+    "app_name": "xlydn",
+    "author": "IAmTomahawkx",
+    "main_module": "src/main/python/launcher.py",
+    "version": "0.0.0",
+    "hidden_imports": [
+        "humanize",
+        "addons.discord",
+        "addons.common",
+        "addons.scripting",
+        "addons.twitch"
+    ]
+}

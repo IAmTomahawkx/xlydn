@@ -3,7 +3,7 @@ python:
   - "3.7.7"
 
 install:
-  - pip install -r requirements.txt
+  - pip install -r requirements/base.txt
 
 script:
-  - python launcher.py --ci
+  - fbs test

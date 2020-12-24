@@ -6,6 +6,7 @@ import importlib.util
 import json
 import logging
 import os
+import pathlib
 import random
 import sys
 import traceback
@@ -47,7 +48,7 @@ twitch_bot_log = logging.getLogger("xlydn.twitchBot")
 twitch_streamer_log = logging.getLogger("xlydn.twitchStreamer")
 
 class System:
-    def __init__(self, config: configparser.ConfigParser, ci=False, **kwargs):
+    def __init__(self, config: configparser.ConfigParser, window: Interface, ci=False):
         self.config = config
         self.api = api.XlydnApi(self)
         self.discord_bot = discord_bot(self,
@@ -81,7 +82,8 @@ class System:
 
         self.locale = locale.LocaleTranslator(config)
         if not ci:
-            self.interface = Interface(self)
+            self.interface = window
+            window.system = self
 
         self.auth_ws = None
         self.auth_ws_session = None
@@ -530,7 +532,7 @@ class System:
         await self.twitch_bot.stop()
         await self.twitch_streamer.stop()
 
-        with open("config.ini", "w", encoding="utf8") as f:
+        with pathlib.Path(Interface.get_data_location(), "config.ini").open("w", encoding="utf8") as f:
             self.config.write(f)
 
         logger.debug("Goodbye!")
@@ -549,8 +551,11 @@ class discord_bot(commands.Bot):
         self.add_check(self.guild_check)
 
     async def guild_check(self, ctx):
-        if ctx.guild is not None and ctx.guild.id != self.system.config.getint("general", "server_id", fallback=None):
-            raise errors.GuildCheckFailed()
+        try:
+            if ctx.guild is not None and ctx.guild.id != self.system.config.getint("general", "server_id", fallback=None):
+                raise errors.GuildCheckFailed()
+        except:
+            pass
 
         return True
 
@@ -583,16 +588,18 @@ class discord_bot(commands.Bot):
         self.loaded = True
 
         self.load_extension("jishaku")
-        for ext in os.listdir("addons/discord"):
-            ext = ext.replace(".py", "")
-            if ext != "__pycache__":
-                try:
-                    self.load_extension("addons.discord."+ext)
-                except:
-                    if ci:
-                        raise
-                    else:
-                        traceback.print_exc()
+        import addons.discord
+        for mod in dir(addons.discord):
+            if mod.startswith("_"):
+                continue
+
+            try:
+                self.load_extension("addons.discord." + mod)
+            except:
+                if ci:
+                    raise
+                else:
+                    traceback.print_exc()
 
     def get_context(self, message, **kwargs):
         return super().get_context(message, cls=CompatContext)
@@ -744,11 +751,13 @@ class twitch_bot(tio_commands.Bot, GroupMixin):
 
     def load(self, ci=False):
         if not self.streamer and not self.loaded:
-            for ext in os.listdir("addons/twitch"):
-                if ext == "__pycache__":
+            import addons.twitch
+            for ext in dir(addons.twitch):
+                if ext.startswith("_"):
                     continue
+
                 try:
-                    self.load_extension("addons.twitch." + ext.replace(".py", ""))
+                    self.load_extension("addons.twitch." + ext)
                 except:
                     if ci:
                         raise

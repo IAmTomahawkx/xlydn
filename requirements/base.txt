@@ -14,5 +14,4 @@ PyQt5
 PyQt5-Stubs
 git+https://github.com/ShineyDev/prettify.py.git
 orjson
-pywin32; sys.platform == "win32"
 fbs

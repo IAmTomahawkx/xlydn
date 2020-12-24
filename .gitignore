@@ -1,10 +1,9 @@
-src/
-
+target/
 config.ini
 services/data.db
 services/modstriking.bin
 dev_locale/*
-locale/*
+src/main/resources/base/locale/*
 template.pot
 plugins/
 
