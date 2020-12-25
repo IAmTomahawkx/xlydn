@@ -1,0 +1,19 @@
+{
+  "name": "Example",
+  "description": "This is an example config + plugin!",
+  "identifier": "com.iamtomahawkx.example",
+  "version": "0.0.1",
+  "loader": "master.py",
+  "ui_file": "ui.json",  // it's important to note that the ui_file should not be referenced, it is still very much being bikeshedded! Omit this in your config. (yes i know json doesnt have comments)
+  "save_file": "ui.save.json", // this also doesnt do anything. Omit this in your config
+  "author": {
+    "display": "TMHK",
+    "discord_id": 547861735391100931,
+    "email": "iamtomahawkx@gmail.com"
+  },
+  "schema": { // Optional, set this to null if you don't need to store anything.
+    "database_file": "data.db",
+    "name": "example",
+    "creation": "CREATE TABLE IF NOT EXISTS example.hello (some_name text);"
+  }
+}

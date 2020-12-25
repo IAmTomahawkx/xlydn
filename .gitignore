@@ -1,11 +1,7 @@
 target/
-config.ini
-services/data.db
-services/modstriking.bin
 dev_locale/*
 src/main/resources/base/locale/*
 template.pot
-plugins/
 
 # Created by .ignore support plugin (hsz.mobi)
 ### Python template

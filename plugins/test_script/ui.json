@@ -1,0 +1,50 @@
+{
+    "commands": [
+        {
+            "name": "shoutout",
+            "description": "gives a user a shoutout!",
+            "default_enabled": true,
+            "options": [
+                {
+                    "type": "textbox",
+                    "title": "Response Message",
+                    "identifier": "commands.shoutout.response",
+                    "tooltip": "The response for the bot to send when a user runs the command",
+                    "default": "Hello"
+                },
+                {
+                    "type": "checkbox",
+                    "title": "Include twitch link",
+                    "identifier": "commands.shoutout.link",
+                    "tooltip": "Whether or not the targets twitch link should be included",
+                    "default": true
+                },
+                {
+                    "type": "permissionbox",
+                    "title": "Who can use the shoutout command",
+                    "identifier": "commands.shoutout.permissions",
+                    "default": "moderator"
+                }
+            ]
+        }
+    ],
+    "extras": [
+        {
+            "type": "numbox",
+            "title": "A random number box",
+            "identifier": "misc.random_numbox",
+            "tooltip": "Hi",
+            "default": 10
+        },
+        {
+            "type": "slider",
+            "title": "A random slider",
+            "identifier": "misc.random_slider",
+            "tooltip": "Hello",
+            "min": 1,
+            "max": 50,
+            "ticks": 5,
+            "default": 10
+        }
+    ]
+}
