@@ -2,6 +2,7 @@ from typing import Optional, Union
 import gzip
 import json
 import time
+import pathlib
 import os
 import datetime
 
@@ -35,8 +36,9 @@ class ActionConverter(commands.Converter):
         raise commands.UserInputError(ctx.bot.system.locale("Invalid action! Try 'tempmute', 'kick', 'tempban' or 'ban'"))
 
 class StrikesValues:
-    def __init__(self, config):
-        self.config = config
+    def __init__(self, system):
+        self.system = system
+        self.config = system.config
         self.actions = {
             1: self.punish_tempmute,
             2: self.punish_kick,
@@ -44,17 +46,25 @@ class StrikesValues:
             4: self.punish_tempban,
             5: self.punish_ban
         }
-        if os.path.exists(os.path.join(os.curdir, "services", "modstriking.bin")):
-            with open(os.path.join(os.curdir, "services", "modstriking.bin"), "rb") as f:
-                self._value = json.loads(gzip.decompress(f.read()).decode())
+        pth = pathlib.Path(self.system.interface.get_data_location(), "services", "modstriking.bin")
+        loaded = False
+        if pth.exists():
+            with pth.open(mode="rb") as f:
+                try:
+                    self._value = json.loads(gzip.decompress(f.read()).decode())
+                    assert "levels" in self._value and "temp_lengths" in self._value # if someone touches the file, their fault for messing with things they shouldn't.
+                except:
+                    pass
+                else:
+                    loaded = True
 
-        else:
+        if not loaded:
             self._value = {
                 "levels": {},
                 "temp_lengths": {}
             }
             try:
-                with open(os.path.join(os.curdir, "services", "modstriking.bin"), "wb") as f:
+                with pth.open(mode="wb") as f:
                     f.write(gzip.compress(json.dumps(self._value).encode()))
 
             except FileNotFoundError: # travisCI is stupid
@@ -62,7 +72,8 @@ class StrikesValues:
 
 
     def save(self):
-        with open(os.path.join(os.curdir, "services", "modstriking.bin"), "wb") as f:
+        pth = pathlib.Path(self.system.interface.get_data_location(), "services", "modstriking.bin")
+        with pth.open(mode="wb") as f:
             f.write(gzip.compress(json.dumps(self._value).encode()))
 
     def punishment(self, n: int):
@@ -138,7 +149,7 @@ class Moderation(commands.Cog):
         self.locale_name = bot.system.locale("Moderation")
         self.system = bot.system
         self.db = self.system.db
-        self.value = StrikesValues(self.system.config)
+        self.value = StrikesValues(self.system)
         self.levels = {
             1: self.system.locale("temp mute"),
             2: self.system.locale("kick"),

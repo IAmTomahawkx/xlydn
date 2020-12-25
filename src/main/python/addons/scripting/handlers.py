@@ -51,6 +51,7 @@ class ScriptManager:
         self.monitor.start()
         self.db = ScriptDB()
         self.download_lock = asyncio.Lock()
+        self.dir = pathlib.Path(self.system.interface.get_data_location(), "plugins")
 
     async def handle_gateway_update(self, msg):
         pass
@@ -66,26 +67,29 @@ class ScriptManager:
         return data
 
     async def search_and_load(self):
-        scripts_path = os.path.abspath(os.path.join(".", "plugins"))
-        if not os.path.exists(scripts_path) and not os.path.isdir(scripts_path):
-            os.mkdir(scripts_path)
+        pth = self.dir
+        if str(pth) not in sys.path:
+            sys.path.append(str(pth))
 
-        for dirname in os.listdir(scripts_path):
-            pth = os.path.join("plugins", dirname)
-            if not os.path.isdir(pth):
+        if not pth.exists() and not os.path.isdir(pth):
+            pth.mkdir()
+
+        for dirname in os.listdir(pth):
+            path = pathlib.Path(pth, dirname)
+            if not os.path.isdir(path):
                 continue
 
-            logger.debug(f"Scanning path {pth}")
+            logger.debug(f"Scanning path {str(path)}")
 
-            files = os.listdir(pth)
+            files = os.listdir(path)
             if "plugin.json" not in files:
-                logger.info(f"Missing plugin.json; skipping load of {pth}")
+                logger.info(f"Missing plugin.json; skipping load of {str(path)}")
                 continue
 
             try:
-                await self.load_script(dirname)
+                await self.load_script(path)
             except ValueError as e:
-                logger.debug(f"failed to load script at {pth}", exc_info=e)
+                logger.debug(f"failed to load script at {str(path)}", exc_info=e)
                 self.errors.append((pth, "".join(traceback.format_exception(type(e), e, e.__traceback__))))
 
     async def reload_all_scripts(self):
@@ -95,11 +99,11 @@ class ScriptManager:
         await self.search_and_load()
         logger.debug("Reloading all plugins : complete")
 
-    async def load_script(self, directory) -> "ScriptHandler":
-        handle = ScriptHandler(directory, self, self.system.loop)
+    async def load_script(self, path: pathlib.Path) -> "ScriptHandler":
+        handle = ScriptHandler(path, self, self.system.loop)
         await handle.load()
         self.plugins[handle.identifier] = handle
-        logger.debug(f"Loaded plugin {handle.name} in directory plugins/{directory}")
+        logger.debug(f"Loaded plugin {handle.name} in directory {path}")
         return handle
 
     async def reload_script(self, identifier):
@@ -156,13 +160,14 @@ class ScriptManager:
         except ValueError as e:
             return e.args[0]
 
-        await self.load_script(plugin_id.replace('.', '_').replace('-', '_'))
+        await self.load_script(pathlib.Path(self.system.interface.get_data_location(), "plugins", plugin_id.replace('.', '_').replace('-', '_')))
 
     async def _download_plugin(self, plugin_id: str):
         logger.debug(f"requesting download for plugin {plugin_id}")
         url = yarl.URL(api.BASE_URL + "api/v2/plugins/download").with_query(plugin_id=plugin_id)
-        if not os.path.exists("./tmp"):
-            os.mkdir("./tmp")
+        tmp = pathlib.Path(self.system.interface.get_data_location(), "tmp")
+        if not tmp.exists():
+            tmp.mkdir()
 
         async with self.system.session.get(url) as resp:
             if resp.status != 200: # if this returns anything other than 200 theres something wrong
@@ -173,25 +178,27 @@ class ScriptManager:
                 logger.debug(f"aborted plugin download ({plugin_id}). {resp.reason}, {resp.status}")
                 raise ValueError(f"An unknown error occured: {resp.reason} ({resp.status})")
 
-            with open(f"./tmp/{plugin_id}.tar.gz", "wb") as f:
+            _file = pathlib.Path(tmp, plugin_id + ".tar.gz")
+            with _file.open("wb") as f:
                 while True:
                     chunk = await resp.content.read(32)
                     if not chunk:
                         break
                     f.write(chunk)
 
-        if not tarfile.is_tarfile(f"./tmp/{plugin_id}.tar.gz"):
-            os.remove(f"./tmp/{plugin_id}.tar.gz")
+        if not tarfile.is_tarfile(str(_file)):
+            os.remove(_file)
             logger.debug(f"aborted plugin unpackaging ({plugin_id}). Downloaded file was an invalid tar file")
             raise ValueError(self.system.locale("There was an error downloading the script (was not a gzipped tar archive)"))
 
         # extract from the tar archive
         async with self.download_lock: # lock to prevent the plugin path being overwritten by concurrent downloads
-            file = tarfile.open(f"./tmp/{plugin_id}.tar.gz", mode="r:gz")
-            file.extractall("./plugins")
-            os.rename("./plugins/plugin", f"./plugins/{plugin_id.replace('.', '_').replace('-', '_')}")
-            os.rename("./plugins/plugin.plug", f"./plugins/{plugin_id}.plug")
-            os.remove(f"./tmp/{plugin_id}.tar.gz")
+            file = tarfile.open(str(_file), mode="r:gz")
+            file.extractall(str(self.dir))
+            file.close()
+            os.rename(pathlib.Path(self.dir, "plugin"), pathlib.Path(self.dir, plugin_id.replace('.', '_').replace('-', '_')))
+            os.rename(pathlib.Path(self.dir, "plugin.plug"), pathlib.Path(self.dir, f"{plugin_id}.plug"))
+            os.remove(_file)
 
         logger.debug(f"Downloaded plugin {plugin_id}")
 
@@ -217,17 +224,21 @@ class ScriptManager:
         if numeric_version >= data['numeric_version']:
             return self.system.locale("This plugin is up to date!")
 
+        plug_path = plugin.directory
         plugin.will_unload()
         await plugin.unload()
         del self.plugins[plugin.identifier]
-        shutil.rmtree(os.path.join("plugins", plugin.directory))
-        os.remove(os.path.join("plugins", plugin_id + ".plug"))
+        shutil.rmtree(plug_path)
+        try:
+            os.remove(pathlib.Path(self.dir, plugin.identifier + ".plug"))
+        except:
+            pass
 
         await self._download_plugin(plugin.identifier)
         importlib.reload(plugin.module)
         del sys.modules[plugin.module_path]
         del plugin
-        plugin = await self.load_script(plugin_id.replace(".", "_").replace("-", "_"))
+        plugin = await self.load_script(plug_path)
         return self.system.locale("Successfully updated from version {0} ({1}) -> version {2} ({3}").format(version,
                                                                                                             numeric_version, plugin.version, plugin.plugin_info['numeric_version'])
 
@@ -250,11 +261,13 @@ class ScriptManager:
             logger.debug(f"Aborted due to the following errors: {', '.join(errors)}")
             raise ValueError("\n".join(errors))
 
-        if not os.path.exists("./tmp"):
-            os.mkdir("./tmp")
+        tmp = pathlib.Path(self.system.interface.get_data_location(), "tmp")
 
-        tar = tarfile.open(f"./tmp/{plugin.identifier}.tar.gz", mode="w:gz")
-        tar.add(os.path.join("plugins", plugin.directory), arcname="plugin")
+        if not tmp.exists():
+            tmp.mkdir()
+
+        tar = tarfile.open(str(tmp) + f"/{plugin.identifier}.tar.gz", mode="w:gz")
+        tar.add(plugin.directory, arcname="plugin")
         tar.close()
 
         data = {
@@ -290,18 +303,18 @@ class ScriptManager:
 
         try:
             async with self.system.session.post(upload_to, data={"file": open(tar.name, "rb")}) as resp:
-                data = await resp.json()
+                data = await resp.text()
                 if 200 > resp.status or resp.status > 299:
-                    logger.debug(f"Aborted file upload due to api rejection: {data} ({resp.status})")
+                    logger.warning(f"Aborted file upload due to api rejection: {data} ({resp.status})")
                     raise ValueError(str(data))
                 else:
-                    logger.debug(f"successfully uploaded {plugin.name} ({plugin.identifier})")
+                    logger.warning(f"successfully uploaded {plugin.name} ({plugin.identifier})")
         finally:
             os.remove(tar.name)
 
 
 class ScriptHandler:
-    def __init__(self, directory: str, manager: ScriptManager, loop: asyncio.AbstractEventLoop):
+    def __init__(self, directory: pathlib.Path, manager: ScriptManager, loop: asyncio.AbstractEventLoop):
         self.directory = directory
         self.dispatcher = signals.MultiSignal(loop=loop, strict_async=True)
         self.__manager = manager
@@ -341,7 +354,7 @@ class ScriptHandler:
         self.ui_file = config.get("ui_file")
         self.save_file = config.get("save_file")
         if self.save_file:
-            self.save_file = os.path.join("plugins", self.directory, self.save_file)
+            self.save_file = pathlib.Path(self.directory, self.save_file)
             try:
                 with open(self.save_file) as f:
                     self.current_spec = json.loads(f.read())
@@ -352,7 +365,7 @@ class ScriptHandler:
             self.current_spec = {}
 
         try:
-            with open(os.path.join("plugins", self.directory, self.ui_file)) as f:
+            with pathlib.Path(self.directory, self.ui_file).open(encoding="utf8") as f:
                 self.ui_spec = json.loads(f.read())
 
         except FileNotFoundError:
@@ -372,18 +385,17 @@ class ScriptHandler:
 
         if self.schema:
             try:
-                file = os.path.join("plugins", self.directory, self.schema['database_file'])
+                file = os.path.join(self.directory, self.schema['database_file'])
                 await self.__manager.db._connect_script(self.schema['name'], file)
                 await self.__manager.db.executescript(self.schema['creation'])
             except KeyError:
                 raise ValueError(f"{self.identifier} :: load :: schema :: missing required key(s): database_file, name, creation")
 
             except aiosqlite3.OperationalError as e:
-                raise
-                raise ValueError(f"{self.identifier} :: load :: schema :: create :: bad SQL statement. {e}")
+                raise ValueError(f"{self.identifier} :: load :: schema :: create :: bad SQL statement. {e}") from e
 
         try:
-            self.module_path = f"plugins.{self.directory}.{config['loader'].replace('.py', '')}"
+            self.module_path = f"{self.directory.stem}.{config['loader'].replace('.py', '')}"
             self.module = importlib.import_module(self.module_path)
             if not hasattr(self.module, "setup") or not inspect.isfunction(self.module.setup):
                 raise ValueError(f"{self.identifier} :: load :: missing setup function")
@@ -395,16 +407,15 @@ class ScriptHandler:
         except Exception as e:
             raise ValueError(f"failed to load {self.name}") from e
 
-        pth = pathlib.Path("plugins", f"{self.identifier}.plug")
+        pth = pathlib.Path(self.system.interface.get_data_location(), "plugins", f"{self.identifier}.plug")
         if pth.exists():
             with pth.open("rb") as f:
                 data = f.read()
                 try:
                     data = zlib.decompress(data)
+                    self.plugin_info = json.loads(data)
                 except: # noqa
                     pass
-                else:
-                    self.plugin_info = json.loads(data)
 
     async def enable(self):
         self.enabled = True

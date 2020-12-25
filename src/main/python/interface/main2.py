@@ -169,6 +169,22 @@ class Window:
         layout.addLayout(stackV)
         layout.addSpacerItem(QtWidgets.QSpacerItem(1, 30))
 
+    async def capture_refresh(self, streamer: bool):
+        try:
+            if streamer:
+                token = self.system.config.get("tokens", "twitch_streamer_token")
+            else:
+                token = self.system.config.get("tokens", "twitch_bot_token")
+
+            refresh = await self.system.api.get_refresh_token(token)
+            if refresh is None:
+                raise ValueError("Api rejected us")
+
+            self.system.config.set("tokens", f"twitch_{'streamer' if streamer else 'bot'}_refresh", refresh)
+            logger.debug(f"Captured refresh token! streamer: {streamer}")
+        except Exception as e:
+            logger.exception(f"Failed to capture refresh! streamer: {streamer}", exc_info=e)
+
     def token_connect_discord(self):
         self.discordtoken_connector.setEnabled(False)
         self.discordtoken_disconnector.setEnabled(True)
@@ -187,6 +203,7 @@ class Window:
         self.bottoken_disconnector.setEnabled(True)
         self.bottoken.setEnabled(False)
         self.system.config.set("tokens", "twitch_bot_token", self.bottoken.text())
+        asyncio.run_coroutine_threadsafe(self.capture_refresh(False), self.system.loop)
         self.system.connect_twitch_bot()
 
     def token_disconnect_bot(self):
@@ -200,6 +217,7 @@ class Window:
         self.streamertoken_disconnector.setEnabled(True)
         self.streamertoken.setEnabled(False)
         self.system.config.set("tokens", "twitch_streamer_token", self.streamertoken.text())
+        asyncio.run_coroutine_threadsafe(self.capture_refresh(True), self.system.loop)
         self.system.connect_twitch_streamer()
 
     def token_disconnect_streamer(self):

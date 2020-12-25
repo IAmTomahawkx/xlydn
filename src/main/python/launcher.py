@@ -103,5 +103,6 @@ if __name__ == "__main__":
         else:
             window.normal()
         bot.interface.run()
+        import fbs
 
 "https://id.twitch.tv/oauth2/authorize?response_type=token&client_id=vcs989uc111bryinsv1bwps0qdgkis&redirect_uri=https://bot.idevision.net/auth/token&scope=chat:edit+chat:read+whispers:read+whispers:edit+user_read+channel_check_subscription+channel_commercial+channel_editor+channel_subscriptions&force_verify=true"

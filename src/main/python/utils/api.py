@@ -65,6 +65,7 @@ class XlydnApi:
     async def get_refresh_token(self, token: str) -> Optional[str]:
         async with self.session.post(BASE_URL + "api/v2/token/capture_refresh", json={"token": token}) as resp:
             if resp.status != 200:
+                logger.warning(f"Api rejected us: {resp.status}, {resp.reason}, {await resp.text()}")
                 return None
 
             data = await resp.json()
@@ -83,6 +84,7 @@ class XlydnApi:
         async with self.session.post(BASE_URL + "api/v2/bot/identify", json=data) as resp:
             if resp.status == 200:
                 logger.info("successfully done hello")
+                return True
 
             elif resp.status == 201:
                 data = await resp.json()
@@ -91,6 +93,12 @@ class XlydnApi:
                 self.sys.id = data['given_id']
                 with open(os.path.join("services", ".dfuuid.lock"), "w") as f:
                     f.write(data['given_id'])
+                return True
+
+            elif resp.status == 401:
+                logger.error(f"Hello rejected by api: {resp.status}, {resp.reason}, {await resp.text()}")
+                return False
 
             elif 200 > resp.status or resp.status > 299:
                 logger.error(f"The api encountered an issue. {resp.status} {await resp.text()}")
+                return False

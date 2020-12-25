@@ -58,15 +58,12 @@ class System:
         self.twitch_streamer = twitch_bot(self, self.get_tio_prefix, streamer=True) # noqa
         self.twitch_bot = twitch_bot(self, self.get_tio_prefix) # noqa
 
-        self.db = Database()
+        self.db = Database(self)
         self.loop = asyncio.get_event_loop()
         self.alive = True
         self.bot_run_event = asyncio.Event()
         self.streamer_run_event = asyncio.Event()
         self.discord_run_event = asyncio.Event()
-        self.scripts = handlers.ScriptManager(self)
-        if not ci:
-            self.loop.create_task(self.scripts.search_and_load())
 
         self.user_cache = {}
 
@@ -81,9 +78,12 @@ class System:
         self.oauth_waiting = {}
 
         self.locale = locale.LocaleTranslator(config)
+        self.interface = window
+        window.system = self
+
+        self.scripts = handlers.ScriptManager(self)
         if not ci:
-            self.interface = window
-            window.system = self
+            self.loop.create_task(self.scripts.search_and_load())
 
         self.auth_ws = None
         self.auth_ws_session = None
@@ -100,8 +100,9 @@ class System:
         if not ci:
             self.loop.create_task(self.build_automod_regex())
 
-        if os.path.exists(os.path.join("services", ".dfuuid.lock")):
-            with open(os.path.join("services", ".dfuuid.lock")) as f:
+        pth = pathlib.Path(window.get_data_location(), "services", ".dfuuid.lock")
+        if pth.exists():
+            with pth.open(encoding="utf8") as f:
                 self.id = f.read()
 
         else:
@@ -277,7 +278,7 @@ class System:
 
     async def create_user(self, discord_id=None, twitch_id=None, twitch_username=None):
         userid = random.randint(10590208453, 90823972987079800) # yup, i did this.
-        await self.db.execute("INSERT INTO accounts VALUES (?,?,?,?,0,0,0)", twitch_id, twitch_username, discord_id, userid)
+        await self.db.execute("INSERT INTO accounts VALUES (?,?,?,?,0,0,0,'')", twitch_id, twitch_username, discord_id, userid)
         resp = common.User((twitch_id, twitch_username, discord_id, userid, 0, 0, 0), self)
         self.user_cache[resp.id] = resp
         return resp
@@ -442,6 +443,8 @@ class System:
         self.streamer_run_event.clear()
 
     async def _run(self):
+        from discord.backoff import ExponentialBackoff
+        backoff = ExponentialBackoff()
         try:
             self.session = aiohttp.ClientSession()
             dbot = None
@@ -456,7 +459,9 @@ class System:
                 allow_starts = False
 
             else:
-                await self.api.do_hello()
+                if not await self.api.do_hello():
+                    logger.warning("Did not receive an OK from the xlydn api")
+                    allow_starts = False
 
             try:
                 while self.alive:

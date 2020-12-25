@@ -1,11 +1,13 @@
 import aiosqlite3
 import asyncio
-import warnings
+import pathlib
+from interface.main2 import Window
 
 class Database:
-    def __init__(self):
+    def __init__(self, system):
+        self.system = system
         self.connection = None
-        self.db_path = "services/data.db"
+        self.db_path = pathlib.Path(Window.get_data_location(), "services", "data.db")
         self.lock = asyncio.Lock()
 
     async def close(self):
@@ -15,7 +17,7 @@ class Database:
     async def setup(self):
         self.connection = await aiosqlite3.connect(self.db_path)
 
-        with open("services/schema.sql") as f:
+        with open(self.system.interface.app.get_resource("schema.sql"), encoding="utf8") as f:
             schema = f.read()
 
         try:
