@@ -20,7 +20,7 @@ fbs run
 ~~alternatively, install the binary releases~~
 (just kidding, no binary releases have been made yet. SoonTm)
 
-##Plugins
+## Plugins
 
 As of right now, the plugin api is very much in the works. The functions available for plugins are viewable in
 `src/main/python/addons/scripting/helpers.py` and `src/.../scripting/models.py`. A very basic script would look something like
