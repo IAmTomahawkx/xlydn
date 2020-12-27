@@ -6,10 +6,11 @@ import logging
 import inspect
 import tarfile
 import pathlib
+import time
 import zlib
 import shutil
 import traceback # use traceback instead of prettify.py
-from typing import Optional
+from typing import Optional, List, Tuple
 try:
     import orjson as json
 except:
@@ -506,23 +507,38 @@ class Communicator:
     def __init__(self, handle: ScriptHandler):
         self.dispatcher = handle.dispatcher
         self.__system = handle.system
-        self._module = None
         self.__injections = {}
         self.discord_user = handle.system.discord_bot.user
         self.commands = {}
 
-    @property
-    def module(self):
-        return self._module
-
-    @module.setter
-    def module(self, arg):
-        self._module = arg
-
     def get_discord_channel(self, channel_id: int) -> Optional[dpy.TextChannel]:
-        return self.__system.discord_bot.guilds[0].get_channel(channel_id) # this assumes were only in one guild
+        """
+        Gets a channel from the discord server that has been configured.
+        Could be `None` if the discord bot is not connected, or the channel was not found
 
-    def get_twitch_channel(self) -> Optional[tio.Channel]:
+        Parameters
+        -----------
+        channel_id: :class:`int`
+            the id of the channel to get
+
+        Returns
+        --------
+        Optional[:class:`discord.TextChannel`]
+        """
+        try:
+            return self.__system.discord_bot.get_guild(self.__system.config.getinteger("general", "server_id")).get_channel(channel_id)
+        except:
+            return None
+
+    def get_stream(self) -> Optional[tio.Channel]:
+        """
+        Gets the twitch channel associated to the streamer.
+        Could be `None` if the twitch streamer or bot are not connected.
+
+        Returns
+        --------
+        Optional[:class:`twitchio.Channel`]
+        """
         name = self.__system.twitch_streamer._ws.nick
         return self.__system.twitch_bot.get_channel(name)
 
@@ -532,7 +548,24 @@ class Communicator:
                  discord_name: str = None,
                  twitch_name: str = None
                  ) -> Optional[common.User]:
-        """fetch a user by their system id, discord id, their discord name, or their twitch name"""
+        """
+        Fetch a user by their system id, discord id, their discord name, or their twitch name
+
+        Parameters
+        -----------
+        id: Optional[:class:`int`]
+            The system id of the user. This is the quickest method of fetching, so use this when possible
+        discord_id: Optional[:class:`int`]
+            The discord id of the user.
+        discord_name: Optional[:class:`str`]
+            The name of the user. This may return the wrong person if several people in the server are named the same thing
+        twitch_name: Optional[:class:`str`]
+            The twitch name of the user.
+
+        Returns
+        --------
+        Optional[:class:`utils.common.User`] The user, if found. Otherwise will return `None`
+        """
         if id:
             return await self.__system.get_user(id)
 
@@ -552,7 +585,90 @@ class Communicator:
         else:
             raise ValueError("either id, discord_id, discord_name, or twitch_name must be provided.")
 
+    async def twitch_chatters(self) -> Optional[List[common.User]]:
+        """
+        Gets a list of the current chatters in the stream
+
+        Returns
+        --------
+        Optional[List[:class:`utils.common.User`]] A list of users currently in the stream chat
+        """
+        channel = self.__system.twitch_streamer.get_channel(self.__system.twitch_streamer.nick)
+        if channel:
+            chatters = [await self.__system.get_user_twitch_name(x.name) for x in channel.chatters]
+            return chatters
+
+        return None
+
+    @property
+    def discord_channels(self):
+        """
+        Gets a list of channels for the connected server
+
+        Returns
+        --------
+        Optional[List[Union[:class:`discord.TextChannel`, :class:`discord.VoiceChannel`]]]
+        """
+        try:
+            return self.__system.discord_bot.get_guild(self.__system.config.getinteger("general", "discord_id")).channels
+        except:
+            return None
+
+
+    async def get_quotes(self) -> List[Tuple[str, int]]:
+        """
+        Gets all quotes from the quotes module.
+
+        Returns
+        --------
+        List[Tuple[:class:`str`, :class:`int`]] A list of tuples containing the quote, and the timestamp it was created at
+        """
+        return await self.__system.db.fetch("SELECT * FROM quotes ORDER BY insert_time;")
+
+    async def add_quote(self, quote: str, *, timestamp: int=None):
+        """
+        Adds a quote to the quotes module.
+
+        Parameters
+        -----------
+        quote: :class:`str`
+            The quote to add
+        timestamp: :class:`int`
+            An optional timestamp to use instead of the current time. Useful for undoing accidental deletes
+        """
+        await self.__system.db.execute("INSERT INTO quotes VALUES (?,?)", quote, timestamp or int(time.time()))
+
+    async def delete_quote(self, num: int) -> Optional[Tuple[str, int]]:
+        """
+        Deletes a quote from the quotes module.
+
+        parameters
+        -----------
+        num: :class:`int`
+            The quote number to remove. These are determined based off the insert timestamp
+
+        Returns
+        --------
+        Optional[Tuple[:class:`str`, :class:`int`]] The deleted quote.
+        """
+        quotes = await self.system.db.fetch("SELECT * FROM quotes ORDER BY insert_time;")
+        if len(quotes) <= num <= 0:
+            return None
+
+        quote = quotes[num]
+        await self.__system.db.execute("DELETE FROM quotes WHERE insert_time = ?", quote[1])
+        return quote
+
     def inject(self, injection: helpers.Injection):
+        """
+        Injects an injection class into the plugin manager. This will activate all listeners and commands inside.
+        Injections should subclass :class:`addons.scripting.helpers.Injection`.
+
+        Parameters
+        -----------
+        injection: :class:`addons.scripting.helpers.Injection`
+            The class to inject
+        """
         if not isinstance(injection, helpers.Injection):
             raise ValueError(f"expected Injection, got {injection!r}")
 
@@ -564,6 +680,15 @@ class Communicator:
         self.__injections[name] = injection
 
     def eject(self, injection: str):
+        """
+        Ejects an injection class from the plugin manager. This will deactivate all listeners and commands inside.
+        This is done automatically for all Injections when a plugin is unloaded.
+
+        Parameters
+        -----------
+        injection: :class:`str`
+            The name of the injection class to eject.
+        """
         if injection not in self.__injections:
             raise ValueError("This injector has not been injected")
 

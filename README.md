@@ -1,5 +1,6 @@
 # xlydn
-An in-the-works Discord and Twitch bot, run locally by the streamer
+An in-the-works Discord and Twitch bot, run locally by the streamer. \
+Get updates on development progress by joining the [discord server](https://discord.gg/cEAxG8A)
 
 Before you try to run this, heres a good idea if it'll work or not: [![Build Status](https://travis-ci.org/IAmTomahawkx/xlydn.svg?branch=master)](https://travis-ci.org/IAmTomahawkx/xlydn) \
 As for how to run it, You'll need python 3.7 (**not** 3.6, **not** 3.8, **not** 3.9).\

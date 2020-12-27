@@ -173,6 +173,18 @@ class User:
         if chan:
             return discord.utils.get(chan.chatters, name=self.twitch_name)
 
+    async def add_points(self, amount: int):
+        """
+        Adds points to a user's currency
+
+        Parameters
+        -----------
+        amount: :class:`int`
+            The amount of points to add to the user
+        """
+        await self._system.db.execute("UPDATE accounts SET points = ? + points WHERE id = ?", int(amount), self.id)
+
+
 class LineBucket:
     def __init__(self, trigger, shared=False):
         self.shared = shared

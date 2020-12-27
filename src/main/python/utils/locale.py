@@ -15,13 +15,13 @@ gettext_translations = {
         localedir=os.path.join(BASE_DIR, LOCALE_DIR), fallback=False)
     for locale in locales}
 
-gettext_translations['English'] = gettext.NullTranslations()
-locales |= {'English'}
+gettext_translations['en_US'] = gettext.NullTranslations()
+locales |= {'en_US'}
 
 
 class LocaleTranslator:
     normals = {
-        "English": "English",
+        "en_US": "English",
         "English_Vulgar": "English Vulgar",
         "de": "Deutsch"
     }
