@@ -7,3 +7,4 @@ install:
 
 script:
   - fbs test
+  - fbs freeze --debug
