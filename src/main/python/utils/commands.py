@@ -1,3 +1,6 @@
+"""
+Licensed under the Open Software License version 3.0
+"""
 from discord.ext import commands
 
 

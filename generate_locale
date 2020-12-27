@@ -1,4 +1,7 @@
 #!/usr/bin/python3
+"""
+Licensed under the Open Software License version 3.0
+"""
 import sys
 import shutil
 import subprocess

@@ -1,3 +1,6 @@
+"""
+Licensed under the Open Software License version 3.0
+"""
 from typing import Optional, Union
 import gzip
 import json

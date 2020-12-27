@@ -1,3 +1,6 @@
+"""
+Licensed under the Open Software License version 3.0
+"""
 import discord
 import twitchio
 from twitchio.ext import commands as tio_commands

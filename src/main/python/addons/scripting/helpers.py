@@ -1,3 +1,6 @@
+"""
+Licensed under the Open Software License version 3.0
+"""
 import inspect
 
 def _local_wrap(func):

@@ -1,3 +1,6 @@
+"""
+Licensed under the Open Software License version 3.0
+"""
 from discord.ext.commands.context import Context as dpy_context
 from discord.ext.commands.core import _convert_to_bool
 from twitchio import Context as tio_context

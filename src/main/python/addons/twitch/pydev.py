@@ -1,3 +1,6 @@
+"""
+Licensed under the Open Software License version 3.0
+"""
 import twitchio
 from twitchio.ext import commands
 from discord.ext import commands as dpy

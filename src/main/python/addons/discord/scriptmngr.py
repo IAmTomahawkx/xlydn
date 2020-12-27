@@ -1,3 +1,6 @@
+"""
+Licensed under the Open Software License version 3.0
+"""
 import traceback
 import logging
 from utils import commands
